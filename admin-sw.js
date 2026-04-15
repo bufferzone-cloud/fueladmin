@@ -1,9 +1,9 @@
 const CACHE_NAME = 'fuelradar-admin-cache-v1';
 
 const urlsToCache = [
-  '/fuelwatch/admin.html',
-  '/fuelwatch/admin-manifest.json',
-  '/fuelwatch/logo.png',
+  '/fueladmin/admin.html',
+  '/fueladmin/admin-manifest.json',
+  '/fueladmin/logo.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
