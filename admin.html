@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>FuelRadar · Admin Suite (Full Control)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f5f7fb;
+      font-family: 'Inter', system-ui, sans-serif;
+      padding-bottom: 70px;
+    }
+    .admin-container { max-width: 600px; margin: 0 auto; background: #f5f7fb; min-height: 100vh; }
+    .auth-card {
+      background: white;
+      border-radius: 40px;
+      padding: 32px 24px;
+      max-width: 400px;
+      margin: 80px auto;
+      text-align: center;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+    }
+    .dashboard-header {
+      background: white;
+      border-radius: 28px;
+      padding: 12px 18px;
+      margin: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .logo h1 { font-size: 1.4rem; font-weight: 700; }
+    .fuel { color: #10b981; }
+    .radar { color: #ef4444; }
+    .logout-btn {
+      background: #fff1f0;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 40px;
+      color: #dc2626;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    .toolbar {
+      background: white;
+      border-radius: 28px;
+      padding: 10px 16px;
+      margin: 0 12px 16px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .stats-badge {
+      background: #ecfdf5;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+    .filter-group {
+      display: flex;
+      gap: 8px;
+      background: #f8fafc;
+      border-radius: 60px;
+      padding: 3px 6px;
+    }
+    .country-select {
+      border: 1px solid #e2e8f0;
+      border-radius: 30px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
+      background: white;
+    }
+    .search-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 60px;
+      padding: 4px 12px;
+      display: flex;
+      gap: 6px;
+    }
+    .search-box input { border: none; background: transparent; outline: none; width: 120px; font-size: 0.75rem; }
+    .refresh-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 40px;
+      padding: 4px 12px;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px 12px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+      border-top: 1px solid #eef2f6;
+      z-index: 1000;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .bottom-nav .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #94a3b8;
+      cursor: pointer;
+    }
+    .bottom-nav .nav-item i { font-size: 1.3rem; }
+    .bottom-nav .nav-item.active { color: #10b981; }
+    .content-area { padding: 0 12px 80px 12px; }
+    .users-grid, .stations-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f7;
+    }
+    .card-header {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 2px solid #ecfdf5;
+    }
+    .avatar {
+      width: 44px;
+      height: 44px;
+      background: #d1fae5;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #059669;
+    }
+    .card-body { padding: 12px; }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      font-size: 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .location-badge {
+      background: #eef2ff;
+      padding: 4px 8px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 40px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      margin-top: 6px;
+      margin-right: 6px;
+    }
+    .action-btn.danger { border-color: #fecaca; color: #b91c1c; }
+    .action-btn.success { border-color: #d1fae5; color: #0b5e42; }
+    .ios-toggle {
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+      background-color: #ccc;
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .ios-toggle.active { background-color: #34c759; }
+    .ios-toggle .toggle-knob {
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.2s;
+    }
+    .ios-toggle.active .toggle-knob { left: 24px; }
+    .payment-row {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .chart-container {
+      background: white;
+      border-radius: 24px;
+      padding: 14px;
+      margin-bottom: 20px;
+    }
+    .revenue-summary {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .revenue-card {
+      background: white;
+      border-radius: 20px;
+      padding: 10px 12px;
+      flex: 1;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .revenue-number { font-size: 1.4rem; font-weight: 800; color: #10b981; }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+    }
+    .modal-mask.show { display: flex; }
+    .modal-sheet {
+      background: white;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 32px;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .btn-primary {
+      background: #10b981;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .pill-input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 60px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+    }
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: white;
+      padding: 6px 18px;
+      border-radius: 60px;
+      display: none;
+      z-index: 9999;
+      font-size: 0.75rem;
+    }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .small-text { font-size: 0.7rem; color: #6c757d; }
+    .mt-2 { margin-top: 10px; }
+    .edit-form input { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div class="admin-container">
+  <div id="loginScreen" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    <div class="auth-card">
+      <h2><span class="fuel">Fuel</span><span class="radar">Radar</span> Admin</h2>
+      <p style="margin: 12px 0;">Full control · Payments · Map & Edit</p>
+      <input type="email" id="adminEmail" class="pill-input" value="admin@fuelradar.com" placeholder="admin@fuelradar.com">
+      <input type="password" id="adminPassword" class="pill-input" value="123456" placeholder="Password">
+      <button id="loginBtn" class="btn-primary" style="width:100%">Sign In</button>
+      <p id="loginError" style="color:#dc2626; font-size:12px; margin-top:12px;"></p>
+    </div>
+  </div>
+
+  <div id="dashboard" style="display: none;">
+    <div class="dashboard-header">
+      <div class="logo"><h1><span class="fuel">Fuel</span><span class="radar">Radar</span></h1></div>
+      <button id="logoutMainBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Exit</button>
+    </div>
+    <div class="toolbar">
+      <div class="stats-badge" id="statsBadge">Loading...</div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <div class="filter-group">
+          <select id="countryFilter" class="country-select"><option value="all">All countries</option></select>
+        </div>
+        <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search..."></div>
+        <button id="refreshBtn" class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
+      </div>
+    </div>
+    <div class="content-area" id="contentArea">Loading data...</div>
+  </div>
+</div>
+
+<div class="bottom-nav" id="bottomNav" style="display: none;">
+  <button class="nav-item" data-nav="users"><i class="fas fa-users"></i><span>Users</span></button>
+  <button class="nav-item" data-nav="stations"><i class="fas fa-gas-pump"></i><span>Stations</span></button>
+  <button class="nav-item" data-nav="payments"><i class="fas fa-credit-card"></i><span>Payments</span></button>
+  <button class="nav-item" data-nav="revenue"><i class="fas fa-chart-line"></i><span>Revenue</span></button>
+  <button class="nav-item" data-nav="system"><i class="fas fa-power-off"></i><span>Shutdown</span></button>
+</div>
+
+<div id="toastMsg" class="toast"></div>
+<div id="detailModal" class="modal-mask"><div class="modal-sheet" id="modalContent"></div></div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCzf9dZFB0l7ZEPLJ4tpo4bSjgQNW3VTus",
+    authDomain: "dmkl-8ea2c.firebaseapp.com",
+    databaseURL: "https://dmkl-8ea2c-default-rtdb.firebaseio.com",
+    projectId: "dmkl-8ea2c",
+    storageBucket: "dmkl-8ea2c.firebasestorage.app",
+    messagingSenderId: "155892504799",
+    appId: "1:155892504799:web:45ed0037fd0fe79b85b16a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  let allUsers = [], allStations = [], allPayments = [];
+  let currentTab = "users";
+  let searchTerm = "";
+  let selectedCountry = "all";
+  let revenueChart = null;
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById("toastMsg");
+    toast.textContent = msg;
+    toast.style.backgroundColor = isError ? "#dc2626" : "#10b981";
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 2500);
+  }
+  function escapeHtml(str) { return String(str || "").replace(/[&<>]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m]); }
+
+  // Country full names
+  const countryNames = { "ZM": "Zambia", "ZA": "South Africa", "NG": "Nigeria", "KE": "Kenya", "GH": "Ghana", "US": "United States", "GB": "United Kingdom", "IN": "India", "TZ": "Tanzania", "UG": "Uganda" };
+  function getFullCountry(code) { return countryNames[code?.toUpperCase()] || code || "Unknown"; }
+
+  // Reverse geocode: road, area, city in one line
+  async function getAddressLine(lat, lng) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+      const data = await res.json();
+      if (data?.address) {
+        const road = data.address.road || data.address.pedestrian || "";
+        const suburb = data.address.suburb || data.address.neighbourhood || data.address.village || "";
+        const city = data.address.city || data.address.town || data.address.state_district || "";
+        return [road, suburb, city].filter(p => p).join(", ") || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      }
+    } catch(e) {}
+    return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  }
+
+  async function showLocationMap(lat, lng, title) {
+    const modal = document.getElementById("detailModal");
+    const address = await getAddressLine(lat, lng);
+    document.getElementById("modalContent").innerHTML = `
+      <h3><i class="fas fa-map-pin"></i> ${escapeHtml(title)}</h3>
+      <div id="modalMap" style="height: 250px; width: 100%; border-radius: 20px;"></div>
+      <p style="margin-top: 8px;"><i class="fas fa-road"></i> ${escapeHtml(address)}</p>
+      <p>📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}</p>
+      <button class="btn-primary" id="closeMapModal">Close</button>`;
+    modal.classList.add("show");
+    setTimeout(() => {
+      const map = L.map('modalMap').setView([lat, lng], 15);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: 'OSM' }).addTo(map);
+      L.marker([lat, lng]).addTo(map).bindPopup(title).openPopup();
+    }, 100);
+    document.getElementById("closeMapModal").onclick = () => modal.classList.remove("show");
+  }
+
+  // Edit modals
+  function showEditUserModal(user) {
+    const modal = document.getElementById("detailModal");
+    document.getElementById("modalContent").innerHTML = `
+      <h3>✏️ Edit User</h3>
+      <input id="editUserName" class="pill-input" value="${escapeHtml(user.name)}" placeholder="Name">
+      <input id="editUserPhone" class="pill-input" value="${escapeHtml(user.phone)}" placeholder="Phone">
+      <input id="editUserCountry" class="pill-input" value="${escapeHtml(user.country)}" placeholder="Country code (e.g., ZM)">
+      <button id="saveUserEdit" class="btn-primary" style="width:100%">Save Changes</button>
+      <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
+    modal.classList.add("show");
+    document.getElementById("saveUserEdit").onclick = async () => {
+      const newName = document.getElementById("editUserName").value;
+      const newPhone = document.getElementById("editUserPhone").value;
+      const newCountry = document.getElementById("editUserCountry").value;
+      await db.ref(`users/${user.id}`).update({ name: newName, phone: newPhone, country: newCountry });
+      showToast("User updated");
+      modal.classList.remove("show");
+      refreshAll();
+    };
+    document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
+  }
+
+  function showEditStationModal(station) {
+    const modal = document.getElementById("detailModal");
+    document.getElementById("modalContent").innerHTML = `
+      <h3>✏️ Edit Station</h3>
+      <input id="editStationName" class="pill-input" value="${escapeHtml(station.stationName)}" placeholder="Station Name">
+      <input id="editManagerName" class="pill-input" value="${escapeHtml(station.managerName)}" placeholder="Manager Name">
+      <input id="editStationPhone" class="pill-input" value="${escapeHtml(station.phone)}" placeholder="Phone">
+      <input id="editStationCountry" class="pill-input" value="${escapeHtml(station.country)}" placeholder="Country code">
+      <button id="saveStationEdit" class="btn-primary" style="width:100%">Save Changes</button>
+      <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
+    modal.classList.add("show");
+    document.getElementById("saveStationEdit").onclick = async () => {
+      const updates = {
+        stationName: document.getElementById("editStationName").value,
+        managerName: document.getElementById("editManagerName").value,
+        phone: document.getElementById("editStationPhone").value,
+        country: document.getElementById("editStationCountry").value
+      };
+      await db.ref(`stationOwners/${station.id}`).update(updates);
+      showToast("Station updated");
+      modal.classList.remove("show");
+      refreshAll();
+    };
+    document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
+  }
+
+  // Load data
+  async function loadUsers() {
+    const snap = await db.ref("users").once("value");
+    const users = [];
+    for (const [id, data] of Object.entries(snap.val() || {})) {
+      const locSnap = await db.ref(`locations/${id}`).once("value");
+      users.push({ id, name: data.name || "", email: data.email || "", phone: data.phone || "", country: data.country || "", location: locSnap.val(), isBlocked: false });
+    }
+    const blocked = (await db.ref("blocked/users").once("value")).val() || {};
+    users.forEach(u => u.isBlocked = blocked[u.id] === true);
+    allUsers = users;
+    return users;
+  }
+  async function loadStations() {
+    const snap = await db.ref("stationOwners").once("value");
+    const stations = [];
+    for (const [id, data] of Object.entries(snap.val() || {})) {
+      stations.push({ id, stationName: data.stationName || "", managerName: data.managerName || "", email: data.email || "", phone: data.phone || "", country: data.country || "", location: data.location || null, isBlocked: false });
+    }
+    const blocked = (await db.ref("blocked/stations").once("value")).val() || {};
+    stations.forEach(s => s.isBlocked = blocked[s.id] === true);
+    allStations = stations;
+    return stations;
+  }
+  async function loadPayments() {
+    const snap = await db.ref("payments").once("value");
+    const payments = [];
+    if (snap.val()) {
+      Object.entries(snap.val()).forEach(([id, data]) => payments.push({ id, ...data, status: data.status || "pending" }));
+    }
+    allPayments = payments;
+    return payments;
+  }
+  async function refreshAll() {
+    await Promise.all([loadUsers(), loadStations(), loadPayments()]);
+    renderCurrentTab();
+    updateCountryFilter();
+  }
+  function updateCountryFilter() {
+    const countries = new Set();
+    if (currentTab === "users") allUsers.forEach(u => u.country && countries.add(u.country));
+    else if (currentTab === "stations") allStations.forEach(s => s.country && countries.add(s.country));
+    const select = document.getElementById("countryFilter");
+    if (select) {
+      select.innerHTML = '<option value="all">🌍 All countries</option>';
+      Array.from(countries).sort().forEach(c => { select.innerHTML += `<option value="${c}">${getFullCountry(c)}</option>`; });
+    }
+  }
+
+  // Render Users
+  async function renderUsers() {
+    let filtered = allUsers.filter(u => (u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || u.country === selectedCountry));
+    document.getElementById("statsBadge").innerHTML = `<i class="fas fa-users"></i> ${filtered.length} / ${allUsers.length}`;
+    if (!filtered.length) { document.getElementById("contentArea").innerHTML = `<div class="stats-badge">No users</div>`; return; }
+    let html = `<div class="users-grid">`;
+    for (const u of filtered) {
+      let locHtml = "No location";
+      if (u.location?.lat && u.location?.lng) {
+        const addr = await getAddressLine(u.location.lat, u.location.lng);
+        locHtml = `${addr} <button class="action-btn view-loc" data-lat="${u.location.lat}" data-lng="${u.location.lng}" data-name="${escapeHtml(u.name)}">🗺️</button>`;
+      }
+      html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><strong>${escapeHtml(u.name)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(u.email)}</span></div></div>
+      <div class="card-body"><div class="info-row"><span>📞 Phone</span><span>${escapeHtml(u.phone || "—")}</span></div>
+      <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(u.country)}</span></div>
+      <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
+      <div><button class="action-btn edit-user" data-uid="${u.id}">✏️ Edit</button><button class="action-btn ${u.isBlocked ? 'success' : 'danger'}" data-blockuser="${u.id}" data-blocked="${u.isBlocked}">${u.isBlocked ? "Unblock" : "Block"}</button></div></div></div>`;
+    }
+    html += `</div>`;
+    document.getElementById("contentArea").innerHTML = html;
+    document.querySelectorAll(".view-loc").forEach(btn => btn.onclick = () => showLocationMap(parseFloat(btn.dataset.lat), parseFloat(btn.dataset.lng), btn.dataset.name));
+    document.querySelectorAll(".edit-user").forEach(btn => btn.onclick = () => { const u = allUsers.find(x => x.id === btn.dataset.uid); if (u) showEditUserModal(u); });
+    document.querySelectorAll("[data-blockuser]").forEach(btn => btn.onclick = async () => { const uid = btn.dataset.blockuser, curr = btn.dataset.blocked === "true"; await db.ref(`blocked/users/${uid}`).set(!curr); showToast(curr ? "Unblocked" : "Blocked"); refreshAll(); });
+  }
+
+  // Render Stations (with map & edit & phone)
+  async function renderStations() {
+    let filtered = allStations.filter(s => (s.stationName.toLowerCase().includes(searchTerm) || s.managerName.toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || s.country === selectedCountry));
+    document.getElementById("statsBadge").innerHTML = `<i class="fas fa-gas-pump"></i> ${filtered.length} / ${allStations.length}`;
+    if (!filtered.length) { document.getElementById("contentArea").innerHTML = `<div class="stats-badge">No stations</div>`; return; }
+    let html = `<div class="stations-grid">`;
+    for (const s of filtered) {
+      let locHtml = "No location";
+      if (s.location?.lat && s.location?.lng) {
+        const addr = await getAddressLine(s.location.lat, s.location.lng);
+        locHtml = `${addr} <button class="action-btn view-station-loc" data-lat="${s.location.lat}" data-lng="${s.location.lng}" data-name="${escapeHtml(s.stationName)}">🗺️</button>`;
+      }
+      const isActive = !s.isBlocked;
+      html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-gas-pump"></i></div><div><strong>${escapeHtml(s.stationName)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(s.managerName)}</span></div></div>
+      <div class="card-body"><div class="info-row"><span>📧 Email</span><span>${escapeHtml(s.email)}</span></div>
+      <div class="info-row"><span>📞 Phone</span><span>${escapeHtml(s.phone || "—")}</span></div>
+      <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(s.country)}</span></div>
+      <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
+      <div class="flex-between"><span><strong>App Control</strong></span><div class="ios-toggle ${isActive ? 'active' : ''}" data-station="${s.id}" data-current="${!s.isBlocked}"><div class="toggle-knob"></div></div></div>
+      <div><button class="action-btn edit-station" data-sid="${s.id}">✏️ Edit</button><button class="action-btn view-station-payments" data-sid="${s.id}" data-name="${escapeHtml(s.stationName)}">💳 Payments</button></div></div></div>`;
+    }
+    html += `</div>`;
+    document.getElementById("contentArea").innerHTML = html;
+    document.querySelectorAll(".view-station-loc").forEach(btn => btn.onclick = () => showLocationMap(parseFloat(btn.dataset.lat), parseFloat(btn.dataset.lng), btn.dataset.name));
+    document.querySelectorAll(".edit-station").forEach(btn => { const st = allStations.find(x => x.id === btn.dataset.sid); if (st) showEditStationModal(st); });
+    document.querySelectorAll(".ios-toggle").forEach(toggle => toggle.onclick = async (e) => { e.stopPropagation(); const sid = toggle.dataset.station, currActive = toggle.dataset.current === "true"; await db.ref(`blocked/stations/${sid}`).set(!currActive); showToast(!currActive ? "Station app shutdown" : "Station restored"); refreshAll(); });
+    document.querySelectorAll(".view-station-payments").forEach(btn => btn.onclick = () => { const sid = btn.dataset.sid, name = btn.dataset.name; const stationPayments = allPayments.filter(p => p.stationId === sid); const approved = stationPayments.filter(p => p.status === "approved"); const total = approved.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0); const modal = document.getElementById("detailModal"); document.getElementById("modalContent").innerHTML = `<h3>💳 ${escapeHtml(name)}</h3><div class="revenue-card"><div class="revenue-number">${total.toFixed(2)} USD</div><div>Total Approved</div></div><div style="max-height:250px; overflow-y:auto;">${stationPayments.map(p => `<div class="payment-row"><b>${p.status.toUpperCase()}</b> | ${p.amount} ${p.currency || "USD"} | ${p.timestamp ? new Date(p.timestamp).toLocaleString() : ""}</div>`).join("")}</div><button class="btn-primary" id="closeModalBtn">Close</button>`; modal.classList.add("show"); document.getElementById("closeModalBtn").onclick = () => modal.classList.remove("show"); });
+  }
+
+  function renderPayments() {
+    const pending = allPayments.filter(p => p.status === "pending");
+    const approved = allPayments.filter(p => p.status === "approved");
+    const rejected = allPayments.filter(p => p.status === "rejected");
+    let html = `<div class="revenue-summary"><div class="revenue-card"><div class="revenue-number">${pending.length}</div><div>Pending</div></div><div class="revenue-card"><div class="revenue-number" style="color:#10b981;">${approved.length}</div><div>Approved</div></div><div class="revenue-card"><div class="revenue-number" style="color:#ef4444;">${rejected.length}</div><div>Rejected</div></div></div><h3>⏳ Pending</h3>`;
+    if (!pending.length) html += `<p>No pending payments.</p>`;
+    else pending.forEach(p => { const station = allStations.find(s => s.id === p.stationId); const stationName = station ? station.stationName : (p.stationName || "Unknown"); html += `<div class="payment-row"><div><strong>${escapeHtml(stationName)}</strong></div><div>${p.amount} ${p.currency || "USD"}</div><div>${p.timestamp ? new Date(p.timestamp).toLocaleString() : ""}</div><div><button class="action-btn success" data-approve="${p.id}">Approve</button> <button class="action-btn danger" data-reject="${p.id}">Reject</button></div></div>`; });
+    document.getElementById("contentArea").innerHTML = html;
+    document.querySelectorAll("[data-approve]").forEach(btn => btn.onclick = async () => { await db.ref(`payments/${btn.dataset.approve}`).update({ status: "approved" }); showToast("Approved"); refreshAll(); });
+    document.querySelectorAll("[data-reject]").forEach(btn => btn.onclick = async () => { await db.ref(`payments/${btn.dataset.reject}`).update({ status: "rejected" }); showToast("Rejected"); refreshAll(); });
+  }
+
+  function renderRevenueDashboard() {
+    const approved = allPayments.filter(p => p.status === "approved");
+    const total = approved.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+    const monthly = {};
+    approved.forEach(p => { if (p.timestamp) { const d = new Date(p.timestamp); const key = `${d.getFullYear()}-${d.getMonth()+1}`; monthly[key] = (monthly[key] || 0) + (parseFloat(p.amount) || 0); } });
+    const months = Object.keys(monthly).sort();
+    const data = months.map(m => monthly[m]);
+    const stationRevenue = {};
+    approved.forEach(p => { const name = allStations.find(s => s.id === p.stationId)?.stationName || p.stationName || "Unknown"; stationRevenue[name] = (stationRevenue[name] || 0) + (parseFloat(p.amount) || 0); });
+    const top = Object.entries(stationRevenue).sort((a,b) => b[1]-a[1]).slice(0,6);
+    let html = `<div class="revenue-summary"><div class="revenue-card"><div class="revenue-number">${total.toFixed(2)} USD</div><div>Total Revenue</div></div><div class="revenue-card"><div class="revenue-number">${approved.length}</div><div>Paid</div></div></div>
+    <div class="chart-container"><canvas id="revenueChart" width="400" height="200"></canvas></div><h3>🏆 Top Stations</h3><div class="stations-grid">${top.map(([n, amt]) => `<div class="card"><div class="card-body"><strong>${escapeHtml(n)}</strong><div class="revenue-number" style="font-size:1.2rem;">${amt.toFixed(2)} USD</div></div></div>`).join("")}</div>`;
+    document.getElementById("contentArea").innerHTML = html;
+    const ctx = document.getElementById("revenueChart")?.getContext("2d");
+    if (ctx) { if (revenueChart) revenueChart.destroy(); revenueChart = new Chart(ctx, { type: 'line', data: { labels: months, datasets: [{ label: 'Revenue (USD)', data, borderColor: '#10b981', tension: 0.2 }] } }); }
+  }
+
+  async function renderSystemControl() {
+    const userMaint = (await db.ref("maintenance/userApp").once("value")).val() === true;
+    const stationMaint = (await db.ref("maintenance/stationApp").once("value")).val() === true;
+    const html = `<div class="chart-container"><div class="flex-between" style="margin-bottom:16px;"><span><strong><i class="fas fa-mobile-alt"></i> User App</strong><br><small>Shutdown all users</small></span><div class="ios-toggle ${userMaint ? 'active' : ''}" id="userToggle"><div class="toggle-knob"></div></div></div><div class="flex-between"><span><strong><i class="fas fa-charging-station"></i> Station Owner App</strong><br><small>Shutdown station dashboards</small></span><div class="ios-toggle ${stationMaint ? 'active' : ''}" id="stationToggle"><div class="toggle-knob"></div></div></div><div class="small-text mt-2"><i class="fas fa-info-circle"></i> Toggle to instantly shutdown respective apps (maintenance mode).</div></div>`;
+    document.getElementById("contentArea").innerHTML = html;
+    document.getElementById("userToggle")?.addEventListener("click", async () => { const newVal = !userMaint; await db.ref("maintenance/userApp").set(newVal); showToast(newVal ? "User app SHUT DOWN" : "User app restored"); renderSystemControl(); });
+    document.getElementById("stationToggle")?.addEventListener("click", async () => { const newVal = !stationMaint; await db.ref("maintenance/stationApp").set(newVal); showToast(newVal ? "Station app SHUT DOWN" : "Station app restored"); renderSystemControl(); });
+  }
+
+  function renderCurrentTab() {
+    if (currentTab === "users") renderUsers();
+    else if (currentTab === "stations") renderStations();
+    else if (currentTab === "payments") renderPayments();
+    else if (currentTab === "revenue") renderRevenueDashboard();
+    else if (currentTab === "system") renderSystemControl();
+  }
+
+  // Auth & event binding
+  document.getElementById("loginBtn").onclick = async () => { const email = document.getElementById("adminEmail").value.trim(), pwd = document.getElementById("adminPassword").value; if (email !== "admin@fuelradar.com") { document.getElementById("loginError").innerText = "Admin only."; return; } try { await auth.signInWithEmailAndPassword(email, pwd); } catch(err) { document.getElementById("loginError").innerText = err.message; } };
+  document.getElementById("logoutMainBtn").onclick = () => auth.signOut();
+
+  auth.onAuthStateChanged(async (user) => {
+    if (user && user.email === "admin@fuelradar.com") {
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("bottomNav").style.display = "flex";
+      await refreshAll();
+      document.querySelectorAll(".nav-item").forEach(btn => btn.onclick = () => { document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentTab = btn.dataset.nav; searchTerm = ""; selectedCountry = "all"; document.getElementById("searchInput").value = ""; document.getElementById("countryFilter").value = "all"; renderCurrentTab(); updateCountryFilter(); });
+      document.getElementById("searchInput").oninput = (e) => { searchTerm = e.target.value.toLowerCase(); renderCurrentTab(); };
+      document.getElementById("countryFilter").onchange = (e) => { selectedCountry = e.target.value; renderCurrentTab(); };
+      document.getElementById("refreshBtn").onclick = async () => { await refreshAll(); showToast("Refreshed"); };
+      document.querySelector(".nav-item[data-nav='users']").classList.add("active");
+    } else {
+      if (user) await auth.signOut();
+      document.getElementById("loginScreen").style.display = "flex";
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("bottomNav").style.display = "none";
+    }
+  });
+  window.onclick = (e) => { if (e.target.classList?.contains("modal-mask")) e.target.classList.remove("show"); };
+</script>
+</body>
+</html>
