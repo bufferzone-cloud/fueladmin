@@ -21,16 +21,17 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    /* === BACKGROUND: welcome.png with black transparency (65% visible) === */
+    /* --- DEFAULT LOGIN MODE: welcome.png + black transparency (65% visible) --- */
     body {
       min-height: 100vh;
       background: url('welcome.png') center center / cover no-repeat fixed;
-      background-color: #0a0c10; /* fallback */
+      background-color: #0a0c10;
       font-family: 'Inter', system-ui, sans-serif;
       padding-bottom: 70px;
       position: relative;
+      transition: background 0.3s ease;
     }
-    /* Black transparency overlay (35% black → 65% visible) */
+    /* Black transparency overlay (35% black -> 65% visible) */
     body::before {
       content: "";
       position: fixed;
@@ -42,7 +43,17 @@
       backdrop-filter: brightness(0.96);
       z-index: 0;
       pointer-events: none;
+      transition: opacity 0.3s ease;
     }
+    /* When dashboard is active (logged in), background becomes plain white, overlay hidden */
+    body.dashboard-mode {
+      background: #f5f7fb !important;
+    }
+    body.dashboard-mode::before {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
     /* All content sits above overlay */
     .admin-container, .auth-card, .dashboard-header, .toolbar, .bottom-nav, .card, .modal-sheet {
       position: relative;
@@ -51,71 +62,129 @@
     .admin-container {
       max-width: 600px;
       margin: 0 auto;
-      background: transparent; /* let body background show */
+      background: transparent;
       min-height: 100vh;
     }
-    /* === GLASS INPUT BOXES (slightly transparent, blur effect) === */
-    input, select, .pill-input, .search-box input, .country-select, 
-    #searchInput, #adminEmail, #adminPassword, .pill-input, 
-    .search-box, .filter-group select, .country-select {
-      background: rgba(255, 255, 255, 0.25) !important;
-      backdrop-filter: blur(8px) !important;
+    
+    /* --- LOGIN PAGE: GLASS CARD, NO WHITE BORDER, PROPER SPACING --- */
+    #loginScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .auth-card {
+      background: rgba(20, 28, 32, 0.5) !important;
+      backdrop-filter: blur(16px) !important;
+      border-radius: 48px !important;
+      padding: 40px 32px !important;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+      border: none !important;
+      transition: transform 0.2s;
+    }
+    .auth-card h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+    .auth-card .fuel { color: #10b981; }
+    .auth-card .radar { color: #ef4444; }
+    .auth-card p {
+      color: #f1f5f9;
+      font-weight: 500;
+      margin-bottom: 28px;
+      font-size: 0.9rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    /* Glass inputs with proper spacing */
+    .glass-input {
+      background: rgba(255, 255, 255, 0.2) !important;
+      backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.4) !important;
       border-radius: 60px !important;
-      color: #0f172a !important;
+      padding: 14px 20px !important;
+      width: 100%;
+      font-size: 1rem;
       font-weight: 500;
-      transition: all 0.2s ease;
+      color: white !important;
+      margin-bottom: 18px !important;
+      transition: all 0.2s;
     }
-    input:focus, select:focus, .pill-input:focus {
-      background: rgba(255, 255, 255, 0.4) !important;
-      border-color: #10b981 !important;
+    .glass-input:focus {
       outline: none;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+      background: rgba(255, 255, 255, 0.3) !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
     }
-    /* Placeholder color */
-    input::placeholder, .search-box input::placeholder {
-      color: #334155;
+    .glass-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
       font-weight: 400;
     }
-    /* Adjust search-box specific background */
-    .search-box {
-      background: rgba(255, 255, 255, 0.25) !important;
-      backdrop-filter: blur(8px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.4) !important;
-      border-radius: 60px !important;
-      padding: 4px 12px;
-    }
-    .search-box input {
-      background: transparent !important;
-      border: none !important;
-      backdrop-filter: none;
-      padding: 0;
-    }
-    /* Select dropdowns */
-    select, .country-select {
-      background: rgba(255, 255, 255, 0.25) !important;
-      padding: 6px 12px;
+    .btn-primary {
+      background: #10b981;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 60px;
+      color: white;
       cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      transition: all 0.2s;
+      margin-top: 8px;
     }
-    /* Keep card backgrounds as they were (opaque white) but inputs inside will be glass */
-    .card, .auth-card, .dashboard-header, .toolbar, .bottom-nav, .modal-sheet, .chart-container, .revenue-card, .payment-row {
-      background: white; /* unchanged, only inputs become glass */
+    .btn-primary:hover {
+      background: #0e9f6e;
+      transform: translateY(-2px);
     }
-    /* Ensure readability on glass inputs */
-    .pill-input, #adminEmail, #adminPassword, .country-select, #searchInput {
-      font-weight: 500;
+    #loginError {
+      color: #fca5a5;
+      font-size: 0.75rem;
+      margin-top: 16px;
     }
-    /* Original styles kept intact below, only overrides for glass inputs + background + logo removal */
-    .auth-card {
-      border-radius: 40px;
-      padding: 32px 24px;
-      max-width: 400px;
-      margin: 80px auto;
-      text-align: center;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+    
+    /* --- DASHBOARD MODE (WHITE BACKGROUND) --- */
+    body.dashboard-mode .dashboard-header,
+    body.dashboard-mode .toolbar,
+    body.dashboard-mode .bottom-nav,
+    body.dashboard-mode .card,
+    body.dashboard-mode .modal-sheet,
+    body.dashboard-mode .chart-container,
+    body.dashboard-mode .revenue-card,
+    body.dashboard-mode .payment-row,
+    body.dashboard-mode .auth-card {
+      background: white !important;
     }
-    .dashboard-header {
+    body.dashboard-mode .dashboard-header {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    body.dashboard-mode .toolbar {
       background: white;
+    }
+    body.dashboard-mode .stats-badge {
+      background: #ecfdf5;
+    }
+    /* Keep inputs glass only on login, inside dashboard inputs revert to original style */
+    body.dashboard-mode input,
+    body.dashboard-mode select,
+    body.dashboard-mode .pill-input,
+    body.dashboard-mode .search-box,
+    body.dashboard-mode .country-select {
+      background: rgba(255, 255, 255, 0.9) !important;
+      backdrop-filter: none !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    body.dashboard-mode .search-box {
+      background: #f8fafc !important;
+    }
+    /* Rest of original styles unchanged (keeping functionality) */
+    .dashboard-header {
       border-radius: 28px;
       padding: 12px 18px;
       margin: 12px;
@@ -129,7 +198,7 @@
       align-items: center;
       gap: 8px;
     }
-    /* LOGO IMAGE REMOVED – no img element */
+    /* LOGO REMOVED – no img element */
     .logo h1 { font-size: 1.4rem; font-weight: 700; margin: 0; }
     .fuel { color: #10b981; }
     .radar { color: #ef4444; }
@@ -167,7 +236,6 @@
       cursor: pointer;
     }
     .toolbar {
-      background: white;
       border-radius: 28px;
       padding: 10px 16px;
       margin: 0 12px 16px 12px;
@@ -358,15 +426,6 @@
       max-height: 85vh;
       overflow-y: auto;
     }
-    .btn-primary {
-      background: #10b981;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 40px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
     .flex-between { display: flex; justify-content: space-between; align-items: center; }
     .small-text { font-size: 0.7rem; color: #6c757d; }
     .mt-2 { margin-top: 10px; }
@@ -383,6 +442,10 @@
       z-index: 9999;
       font-size: 0.75rem;
     }
+    /* Additional spacing fix */
+    .pill-input, #adminEmail, #adminPassword {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -393,22 +456,21 @@
     <button id="installAppBtn">Install</button>
   </div>
 
-  <div id="loginScreen" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+  <div id="loginScreen">
     <div class="auth-card">
-      <!-- LOGO IMAGE REMOVED -->
       <h2><span class="fuel">Fuel</span><span class="radar">Radar</span> Admin</h2>
-      <p style="margin: 12px 0;">Full control · Payments · Map & Edit</p>
-      <input type="email" id="adminEmail" class="pill-input" value="admin@fuelradar.com" placeholder="admin@fuelradar.com">
-      <input type="password" id="adminPassword" class="pill-input" value="123456" placeholder="Password">
-      <button id="loginBtn" class="btn-primary" style="width:100%">Sign In</button>
-      <p id="loginError" style="color:#dc2626; font-size:12px; margin-top:12px;"></p>
+      <p>Full control · Payments · Map & Edit</p>
+      <input type="email" id="adminEmail" class="glass-input" value="admin@fuelradar.com" placeholder="admin@fuelradar.com">
+      <input type="password" id="adminPassword" class="glass-input" value="123456" placeholder="Password">
+      <button id="loginBtn" class="btn-primary">Sign In</button>
+      <p id="loginError" style="color:#fca5a5; font-size:12px; margin-top:16px;"></p>
     </div>
   </div>
 
   <div id="dashboard" style="display: none;">
     <div class="dashboard-header">
       <div class="logo">
-        <!-- LOGO IMAGE REMOVED -->
+        <!-- LOGO REMOVED completely -->
         <h1><span class="fuel">Fuel</span><span class="radar">Radar</span></h1>
       </div>
       <button id="logoutMainBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Exit</button>
@@ -463,14 +525,14 @@
     installBanner.style.display = 'none';
   }
 
-  // ---------------------------- SERVICE WORKER REGISTRATION ----------------------------
+  // Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').then(reg => {
       console.log('Service Worker registered', reg);
     }).catch(err => console.log('SW registration failed', err));
   }
 
-  // ---------------------------- FIREBASE & ADMIN LOGIC (unchanged) ----------------------------
+  // ---------------------------- FIREBASE & ADMIN LOGIC (unchanged except background toggle) ----------------------------
   const firebaseConfig = {
     apiKey: "AIzaSyCzf9dZFB0l7ZEPLJ4tpo4bSjgQNW3VTus",
     authDomain: "dmkl-8ea2c.firebaseapp.com",
@@ -728,22 +790,50 @@
     else if (currentTab === "system") renderSystemControl();
   }
 
-  document.getElementById("loginBtn").onclick = async () => { const email = document.getElementById("adminEmail").value.trim(), pwd = document.getElementById("adminPassword").value; if (email !== "admin@fuelradar.com") { document.getElementById("loginError").innerText = "Admin only."; return; } try { await auth.signInWithEmailAndPassword(email, pwd); } catch(err) { document.getElementById("loginError").innerText = err.message; } };
+  // LOGIN LOGIC + BACKGROUND TOGGLE (dashboard mode)
+  document.getElementById("loginBtn").onclick = async () => { 
+    const email = document.getElementById("adminEmail").value.trim();
+    const pwd = document.getElementById("adminPassword").value;
+    if (email !== "admin@fuelradar.com") { 
+      document.getElementById("loginError").innerText = "Admin only."; 
+      return; 
+    }
+    try { 
+      await auth.signInWithEmailAndPassword(email, pwd); 
+    } catch(err) { 
+      document.getElementById("loginError").innerText = err.message; 
+    } 
+  };
+  
   document.getElementById("logoutMainBtn").onclick = () => auth.signOut();
 
   auth.onAuthStateChanged(async (user) => {
     if (user && user.email === "admin@fuelradar.com") {
+      // Switch to dashboard mode: remove background image + overlay
+      document.body.classList.add("dashboard-mode");
       document.getElementById("loginScreen").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
       document.getElementById("bottomNav").style.display = "flex";
       await refreshAll();
-      document.querySelectorAll(".nav-item").forEach(btn => btn.onclick = () => { document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); btn.classList.add("active"); currentTab = btn.dataset.nav; searchTerm = ""; selectedCountry = "all"; document.getElementById("searchInput").value = ""; document.getElementById("countryFilter").value = "all"; renderCurrentTab(); updateCountryFilter(); });
+      document.querySelectorAll(".nav-item").forEach(btn => btn.onclick = () => { 
+        document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active")); 
+        btn.classList.add("active"); 
+        currentTab = btn.dataset.nav; 
+        searchTerm = ""; 
+        selectedCountry = "all"; 
+        document.getElementById("searchInput").value = ""; 
+        document.getElementById("countryFilter").value = "all"; 
+        renderCurrentTab(); 
+        updateCountryFilter(); 
+      });
       document.getElementById("searchInput").oninput = (e) => { searchTerm = e.target.value.toLowerCase(); renderCurrentTab(); };
       document.getElementById("countryFilter").onchange = (e) => { selectedCountry = e.target.value; renderCurrentTab(); };
       document.getElementById("refreshBtn").onclick = async () => { await refreshAll(); showToast("Refreshed"); };
       document.querySelector(".nav-item[data-nav='users']").classList.add("active");
     } else {
       if (user) await auth.signOut();
+      // Back to login mode: restore background
+      document.body.classList.remove("dashboard-mode");
       document.getElementById("loginScreen").style.display = "flex";
       document.getElementById("dashboard").style.display = "none";
       document.getElementById("bottomNav").style.display = "none";
