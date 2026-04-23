@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>FuelRadar · Admin Suite (Full Control)</title>
+  <title>FuelRadar Admin · Full Control</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#10b981">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FuelRadar Admin">
+  <link rel="apple-touch-icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -39,7 +45,17 @@
       align-items: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
-    .logo h1 { font-size: 1.4rem; font-weight: 700; }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    .logo h1 { font-size: 1.4rem; font-weight: 700; margin: 0; }
     .fuel { color: #10b981; }
     .radar { color: #ef4444; }
     .logout-btn {
@@ -51,6 +67,29 @@
       font-weight: 600;
       cursor: pointer;
       font-size: 0.75rem;
+    }
+    .install-banner {
+      background: #10b981;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 60px;
+      margin: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .install-banner button {
+      background: white;
+      color: #10b981;
+      border: none;
+      border-radius: 40px;
+      padding: 5px 16px;
+      font-weight: bold;
+      cursor: pointer;
     }
     .toolbar {
       background: white;
@@ -293,13 +332,19 @@
     .flex-between { display: flex; justify-content: space-between; align-items: center; }
     .small-text { font-size: 0.7rem; color: #6c757d; }
     .mt-2 { margin-top: 10px; }
-    .edit-form input { margin-bottom: 8px; }
   </style>
 </head>
 <body>
 <div class="admin-container">
+  <!-- Install prompt banner (hidden by default) -->
+  <div id="installBanner" class="install-banner" style="display: none;">
+    <span><i class="fas fa-download"></i> Install FuelRadar Admin</span>
+    <button id="installAppBtn">Install</button>
+  </div>
+
   <div id="loginScreen" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
     <div class="auth-card">
+      <img src="logo.png" alt="FuelRadar Logo" style="width: 80px; margin-bottom: 16px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2310b981\'%3E%3Cpath d=\'M5,20h14v2H5V20z M19,18h-1.5l-0.5-2h-3l-0.5,2H9.5L9,16H6l-1,4H3l4-13h2l4,13h-2l-0.8-2h3.6l-0.8,2h2l4-13h2L19,18z M10.3,12l1.7-5l1.7,5H10.3z\'/%3E%3C/svg%3E';">
       <h2><span class="fuel">Fuel</span><span class="radar">Radar</span> Admin</h2>
       <p style="margin: 12px 0;">Full control · Payments · Map & Edit</p>
       <input type="email" id="adminEmail" class="pill-input" value="admin@fuelradar.com" placeholder="admin@fuelradar.com">
@@ -311,7 +356,10 @@
 
   <div id="dashboard" style="display: none;">
     <div class="dashboard-header">
-      <div class="logo"><h1><span class="fuel">Fuel</span><span class="radar">Radar</span></h1></div>
+      <div class="logo">
+        <img src="logo.png" alt="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2310b981\'%3E%3Cpath d=\'M5,20h14v2H5V20z M19,18h-1.5l-0.5-2h-3l-0.5,2H9.5L9,16H6l-1,4H3l4-13h2l4,13h-2l-0.8-2h3.6l-0.8,2h2l4-13h2L19,18z M10.3,12l1.7-5l1.7,5H10.3z\'/%3E%3C/svg%3E';">
+        <h1><span class="fuel">Fuel</span><span class="radar">Radar</span></h1>
+      </div>
       <button id="logoutMainBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Exit</button>
     </div>
     <div class="toolbar">
@@ -340,6 +388,39 @@
 <div id="detailModal" class="modal-mask"><div class="modal-sheet" id="modalContent"></div></div>
 
 <script>
+  // ---------------------------- PWA INSTALL PROMPT ----------------------------
+  let deferredPrompt;
+  const installBanner = document.getElementById('installBanner');
+  const installBtn = document.getElementById('installAppBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBanner.style.display = 'flex';
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') installBanner.style.display = 'none';
+      deferredPrompt = null;
+    }
+  });
+
+  // Also hide banner if already installed (standalone mode)
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    installBanner.style.display = 'none';
+  }
+
+  // ---------------------------- SERVICE WORKER REGISTRATION ----------------------------
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      console.log('Service Worker registered', reg);
+    }).catch(err => console.log('SW registration failed', err));
+  }
+
+  // ---------------------------- FIREBASE & ADMIN LOGIC (unchanged) ----------------------------
   const firebaseConfig = {
     apiKey: "AIzaSyCzf9dZFB0l7ZEPLJ4tpo4bSjgQNW3VTus",
     authDomain: "dmkl-8ea2c.firebaseapp.com",
@@ -368,11 +449,9 @@
   }
   function escapeHtml(str) { return String(str || "").replace(/[&<>]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m]); }
 
-  // Country full names
   const countryNames = { "ZM": "Zambia", "ZA": "South Africa", "NG": "Nigeria", "KE": "Kenya", "GH": "Ghana", "US": "United States", "GB": "United Kingdom", "IN": "India", "TZ": "Tanzania", "UG": "Uganda" };
   function getFullCountry(code) { return countryNames[code?.toUpperCase()] || code || "Unknown"; }
 
-  // Reverse geocode: road, area, city in one line
   async function getAddressLine(lat, lng) {
     try {
       const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
@@ -405,7 +484,6 @@
     document.getElementById("closeMapModal").onclick = () => modal.classList.remove("show");
   }
 
-  // Edit modals
   function showEditUserModal(user) {
     const modal = document.getElementById("detailModal");
     document.getElementById("modalContent").innerHTML = `
@@ -454,7 +532,6 @@
     document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
   }
 
-  // Load data
   async function loadUsers() {
     const snap = await db.ref("users").once("value");
     const users = [];
@@ -503,7 +580,6 @@
     }
   }
 
-  // Render Users
   async function renderUsers() {
     let filtered = allUsers.filter(u => (u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || u.country === selectedCountry));
     document.getElementById("statsBadge").innerHTML = `<i class="fas fa-users"></i> ${filtered.length} / ${allUsers.length}`;
@@ -528,7 +604,6 @@
     document.querySelectorAll("[data-blockuser]").forEach(btn => btn.onclick = async () => { const uid = btn.dataset.blockuser, curr = btn.dataset.blocked === "true"; await db.ref(`blocked/users/${uid}`).set(!curr); showToast(curr ? "Unblocked" : "Blocked"); refreshAll(); });
   }
 
-  // Render Stations (with map & edit & phone)
   async function renderStations() {
     let filtered = allStations.filter(s => (s.stationName.toLowerCase().includes(searchTerm) || s.managerName.toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || s.country === selectedCountry));
     document.getElementById("statsBadge").innerHTML = `<i class="fas fa-gas-pump"></i> ${filtered.length} / ${allStations.length}`;
@@ -603,7 +678,6 @@
     else if (currentTab === "system") renderSystemControl();
   }
 
-  // Auth & event binding
   document.getElementById("loginBtn").onclick = async () => { const email = document.getElementById("adminEmail").value.trim(), pwd = document.getElementById("adminPassword").value; if (email !== "admin@fuelradar.com") { document.getElementById("loginError").innerText = "Admin only."; return; } try { await auth.signInWithEmailAndPassword(email, pwd); } catch(err) { document.getElementById("loginError").innerText = err.message; } };
   document.getElementById("logoutMainBtn").onclick = () => auth.signOut();
 
