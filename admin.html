@@ -20,14 +20,93 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    /* === BACKGROUND: welcome.png with black transparency (65% visible) === */
     body {
-      background: #f5f7fb;
+      min-height: 100vh;
+      background: url('welcome.png') center center / cover no-repeat fixed;
+      background-color: #0a0c10; /* fallback */
       font-family: 'Inter', system-ui, sans-serif;
       padding-bottom: 70px;
+      position: relative;
     }
-    .admin-container { max-width: 600px; margin: 0 auto; background: #f5f7fb; min-height: 100vh; }
+    /* Black transparency overlay (35% black → 65% visible) */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: brightness(0.96);
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* All content sits above overlay */
+    .admin-container, .auth-card, .dashboard-header, .toolbar, .bottom-nav, .card, .modal-sheet {
+      position: relative;
+      z-index: 2;
+    }
+    .admin-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: transparent; /* let body background show */
+      min-height: 100vh;
+    }
+    /* === GLASS INPUT BOXES (slightly transparent, blur effect) === */
+    input, select, .pill-input, .search-box input, .country-select, 
+    #searchInput, #adminEmail, #adminPassword, .pill-input, 
+    .search-box, .filter-group select, .country-select {
+      background: rgba(255, 255, 255, 0.25) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.4) !important;
+      border-radius: 60px !important;
+      color: #0f172a !important;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    input:focus, select:focus, .pill-input:focus {
+      background: rgba(255, 255, 255, 0.4) !important;
+      border-color: #10b981 !important;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+    /* Placeholder color */
+    input::placeholder, .search-box input::placeholder {
+      color: #334155;
+      font-weight: 400;
+    }
+    /* Adjust search-box specific background */
+    .search-box {
+      background: rgba(255, 255, 255, 0.25) !important;
+      backdrop-filter: blur(8px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.4) !important;
+      border-radius: 60px !important;
+      padding: 4px 12px;
+    }
+    .search-box input {
+      background: transparent !important;
+      border: none !important;
+      backdrop-filter: none;
+      padding: 0;
+    }
+    /* Select dropdowns */
+    select, .country-select {
+      background: rgba(255, 255, 255, 0.25) !important;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+    /* Keep card backgrounds as they were (opaque white) but inputs inside will be glass */
+    .card, .auth-card, .dashboard-header, .toolbar, .bottom-nav, .modal-sheet, .chart-container, .revenue-card, .payment-row {
+      background: white; /* unchanged, only inputs become glass */
+    }
+    /* Ensure readability on glass inputs */
+    .pill-input, #adminEmail, #adminPassword, .country-select, #searchInput {
+      font-weight: 500;
+    }
+    /* Original styles kept intact below, only overrides for glass inputs + background + logo removal */
     .auth-card {
-      background: white;
       border-radius: 40px;
       padding: 32px 24px;
       max-width: 400px;
@@ -50,11 +129,7 @@
       align-items: center;
       gap: 8px;
     }
-    .logo img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-    }
+    /* LOGO IMAGE REMOVED – no img element */
     .logo h1 { font-size: 1.4rem; font-weight: 700; margin: 0; }
     .fuel { color: #10b981; }
     .radar { color: #ef4444; }
@@ -116,22 +191,6 @@
       border-radius: 60px;
       padding: 3px 6px;
     }
-    .country-select {
-      border: 1px solid #e2e8f0;
-      border-radius: 30px;
-      padding: 4px 8px;
-      font-size: 0.7rem;
-      background: white;
-    }
-    .search-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 60px;
-      padding: 4px 12px;
-      display: flex;
-      gap: 6px;
-    }
-    .search-box input { border: none; background: transparent; outline: none; width: 120px; font-size: 0.75rem; }
     .refresh-btn {
       background: white;
       border: 1px solid #cbd5e1;
@@ -308,14 +367,9 @@
       cursor: pointer;
       font-size: 0.85rem;
     }
-    .pill-input {
-      width: 100%;
-      padding: 10px 14px;
-      border-radius: 60px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 12px;
-      font-size: 0.85rem;
-    }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
+    .small-text { font-size: 0.7rem; color: #6c757d; }
+    .mt-2 { margin-top: 10px; }
     .toast {
       position: fixed;
       bottom: 80px;
@@ -329,9 +383,6 @@
       z-index: 9999;
       font-size: 0.75rem;
     }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; }
-    .small-text { font-size: 0.7rem; color: #6c757d; }
-    .mt-2 { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -344,7 +395,7 @@
 
   <div id="loginScreen" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
     <div class="auth-card">
-      <img src="logo.png" alt="FuelRadar Logo" style="width: 80px; margin-bottom: 16px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2310b981\'%3E%3Cpath d=\'M5,20h14v2H5V20z M19,18h-1.5l-0.5-2h-3l-0.5,2H9.5L9,16H6l-1,4H3l4-13h2l4,13h-2l-0.8-2h3.6l-0.8,2h2l4-13h2L19,18z M10.3,12l1.7-5l1.7,5H10.3z\'/%3E%3C/svg%3E';">
+      <!-- LOGO IMAGE REMOVED -->
       <h2><span class="fuel">Fuel</span><span class="radar">Radar</span> Admin</h2>
       <p style="margin: 12px 0;">Full control · Payments · Map & Edit</p>
       <input type="email" id="adminEmail" class="pill-input" value="admin@fuelradar.com" placeholder="admin@fuelradar.com">
@@ -357,7 +408,7 @@
   <div id="dashboard" style="display: none;">
     <div class="dashboard-header">
       <div class="logo">
-        <img src="logo.png" alt="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%2310b981\'%3E%3Cpath d=\'M5,20h14v2H5V20z M19,18h-1.5l-0.5-2h-3l-0.5,2H9.5L9,16H6l-1,4H3l4-13h2l4,13h-2l-0.8-2h3.6l-0.8,2h2l4-13h2L19,18z M10.3,12l1.7-5l1.7,5H10.3z\'/%3E%3C/svg%3E';">
+        <!-- LOGO IMAGE REMOVED -->
         <h1><span class="fuel">Fuel</span><span class="radar">Radar</span></h1>
       </div>
       <button id="logoutMainBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Exit</button>
@@ -408,7 +459,6 @@
     }
   });
 
-  // Also hide banner if already installed (standalone mode)
   if (window.matchMedia('(display-mode: standalone)').matches) {
     installBanner.style.display = 'none';
   }
