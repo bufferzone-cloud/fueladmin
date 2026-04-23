@@ -1,0 +1,22 @@
+{
+  "name": "FuelRadar Admin",
+  "short_name": "FuelAdmin",
+  "description": "Complete control over FuelRadar users, stations, payments, and system shutdown.",
+  "start_url": "https://bufferzone-cloud.github.io/fueladmin/admin.html",
+  "display": "standalone",
+  "theme_color": "#10b981",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
