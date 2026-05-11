@@ -408,8 +408,7 @@
             overflow-y: auto;
         }
         .users-grid,
-        .stations-grid,
-        .customers-grid {
+        .stations-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 14px;
@@ -2180,7 +2179,6 @@
     <div class="bottom-nav" id="bottomNav" style="display:none;">
         <button class="nav-item" data-nav="users"><i class="fas fa-users"></i><span>Users</span></button>
         <button class="nav-item" data-nav="stations"><i class="fas fa-gas-pump"></i><span>Stations</span></button>
-        <button class="nav-item" data-nav="customers"><i class="fas fa-user-friends"></i><span>Customers</span></button>
         <button class="nav-item" data-nav="payments"><i class="fas fa-credit-card"></i><span>Payments</span></button>
         <button class="nav-item" data-nav="revenue"><i class="fas fa-chart-line"></i><span>Revenue</span></button>
         <button class="nav-item" data-nav="system"><i class="fas fa-power-off"></i><span>Shutdown</span></button>
@@ -2460,8 +2458,7 @@
         // ================================================================
         let allUsers = [],
             allStations = [],
-            allPayments = [],
-            allCustomers = [];
+            allPayments = [];
         let currentTab = "users";
         let searchTerm = "";
         let selectedCountry = "all";
@@ -2511,6 +2508,7 @@
         let sentSound = new Audio('sent.mp3');
         let messageSearchResults = [];
         let companyChats = {};
+        let totalUnreadMessages = 0;
 
         // WebRTC & Call state
         let localStream = null;
@@ -2747,16 +2745,6 @@
             return stations;
         }
 
-        async function loadCustomers() {
-            const snap = await db.ref("customers").once("value");
-            const customers = [];
-            if (snap.val()) {
-                Object.entries(snap.val()).forEach(([id, data]) => customers.push({ id, ...data }));
-            }
-            allCustomers = customers;
-            return customers;
-        }
-
         async function loadPayments() {
             const snap = await db.ref("payments").once("value");
             const payments = [];
@@ -2769,7 +2757,7 @@
         }
 
         async function refreshAll() {
-            await Promise.all([loadUsers(), loadStations(), loadCustomers(), loadPayments()]);
+            await Promise.all([loadUsers(), loadStations(), loadPayments()]);
             renderCurrentTab();
             updateCountryFilter();
         }
@@ -2778,7 +2766,6 @@
             const countries = new Set();
             if (currentTab === "users") allUsers.forEach(u => u.country && countries.add(u.country));
             else if (currentTab === "stations") allStations.forEach(s => s.country && countries.add(s.country));
-            else if (currentTab === "customers") allCustomers.forEach(c => c.country && countries.add(c.country));
             const select = document.getElementById("countryFilter");
             if (select) {
                 select.innerHTML = '<option value="all">🌍 All countries</option>';
@@ -2788,29 +2775,31 @@
             }
         }
 
-        // ----- USERS -----
+        // ----- USERS (with Create User button) -----
         async function renderUsers() {
             let filtered = allUsers.filter(u => (u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase()
                 .includes(searchTerm)) && (selectedCountry === "all" || u.country === selectedCountry));
             document.getElementById("statsBadge").innerHTML =
                 `<i class="fas fa-users"></i> ${filtered.length} / ${allUsers.length}`;
-            if (!filtered.length) { document.getElementById("contentArea").innerHTML =
-                `<div class="stats-badge">No users</div>`; return; }
-            let html = `<div class="users-grid">`;
-            for (const u of filtered) {
-                let locHtml = "No location";
-                if (u.location?.lat && u.location?.lng) {
-                    const addr = await getAddressLine(u.location.lat, u.location.lng);
-                    locHtml =
-                        `${addr} <button class="action-btn view-loc" data-lat="${u.location.lat}" data-lng="${u.location.lng}" data-name="${escapeHtml(u.name)}">🗺️</button>`;
+            let html =
+                `<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;"><button class="btn btn-green" onclick="openCreateModal('user')"><i class="fas fa-plus"></i> Create User</button></div>`;
+            if (!filtered.length) { html += `<div class="stats-badge">No users</div>`; } else {
+                html += `<div class="users-grid">`;
+                for (const u of filtered) {
+                    let locHtml = "No location";
+                    if (u.location?.lat && u.location?.lng) {
+                        const addr = await getAddressLine(u.location.lat, u.location.lng);
+                        locHtml =
+                            `${addr} <button class="action-btn view-loc" data-lat="${u.location.lat}" data-lng="${u.location.lng}" data-name="${escapeHtml(u.name)}">🗺️</button>`;
+                    }
+                    html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><strong>${escapeHtml(u.name)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(u.email)}</span></div></div>
+                  <div class="card-body"><div class="info-row"><span>📞 Phone</span><span>${escapeHtml(u.phone||"—")}</span></div>
+                  <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(u.country)}</span></div>
+                  <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
+                  <div><button class="action-btn edit-user" data-uid="${u.id}">✏️ Edit</button><button class="action-btn ${u.isBlocked?'success':'danger'}" data-blockuser="${u.id}" data-blocked="${u.isBlocked}">${u.isBlocked?"Unblock":"Block"}</button></div></div></div>`;
                 }
-                html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-user-circle"></i></div><div><strong>${escapeHtml(u.name)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(u.email)}</span></div></div>
-              <div class="card-body"><div class="info-row"><span>📞 Phone</span><span>${escapeHtml(u.phone||"—")}</span></div>
-              <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(u.country)}</span></div>
-              <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
-              <div><button class="action-btn edit-user" data-uid="${u.id}">✏️ Edit</button><button class="action-btn ${u.isBlocked?'success':'danger'}" data-blockuser="${u.id}" data-blocked="${u.isBlocked}">${u.isBlocked?"Unblock":"Block"}</button></div></div></div>`;
+                html += `</div>`;
             }
-            html += `</div>`;
             document.getElementById("contentArea").innerHTML = html;
             document.querySelectorAll(".view-loc").forEach(btn => btn.onclick = () => showLocationMap(parseFloat(btn
                 .dataset.lat), parseFloat(btn.dataset.lng), btn.dataset.name));
@@ -2851,8 +2840,8 @@
                 .toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || s.country === selectedCountry));
             document.getElementById("statsBadge").innerHTML =
                 `<i class="fas fa-gas-pump"></i> ${filtered.length} / ${allStations.length}`;
-            let html = `
-              <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+            let html =
+                `<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
                 <button class="btn btn-green" onclick="openCreateModal('company')"><i class="fas fa-plus"></i> Create Company</button>
                 <button class="btn btn-green" onclick="openCreateModal('station')"><i class="fas fa-plus"></i> Create Station</button>
               </div>`;
@@ -2925,61 +2914,10 @@
             document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
         }
 
-        // ----- CUSTOMERS -----
-        async function renderCustomers() {
-            let filtered = allCustomers.filter(c => (c.name.toLowerCase().includes(searchTerm) || c.email.toLowerCase()
-                .includes(searchTerm)) && (selectedCountry === "all" || c.country === selectedCountry));
-            document.getElementById("statsBadge").innerHTML =
-                `<i class="fas fa-user-friends"></i> ${filtered.length} / ${allCustomers.length}`;
-            let html =
-                `<div style="display:flex;gap:8px;margin-bottom:12px;"><button class="btn btn-green" onclick="openCreateModal('customer')"><i class="fas fa-plus"></i> Create Customer</button></div>`;
-            if (!filtered.length) { html += `<div class="stats-badge">No customers</div>`; } else {
-                html += `<div class="customers-grid">`;
-                for (const c of filtered) {
-                    html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-user"></i></div><div><strong>${escapeHtml(c.name)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(c.email)}</span></div></div>
-                  <div class="card-body"><div class="info-row"><span>📞 Phone</span><span>${escapeHtml(c.phone||"—")}</span></div>
-                  <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(c.country)}</span></div>
-                  <div class="info-row"><span>📧 Email</span><span>${escapeHtml(c.email)}</span></div>
-                  <div><button class="action-btn edit-customer" data-cid="${c.id}">✏️ Edit</button></div></div></div>`;
-                }
-                html += `</div>`;
-            }
-            document.getElementById("contentArea").innerHTML = html;
-            document.querySelectorAll(".edit-customer").forEach(btn => btn.onclick = () => { const c = allCustomers
-                    .find(x => x.id === btn.dataset.cid); if (c) showEditCustomerModal(c); });
-        }
-
-        function showEditCustomerModal(customer) {
-            const modal = document.getElementById("detailModal");
-            document.getElementById("modalContent").innerHTML = `
-              <h3>✏️ Edit Customer</h3>
-              <input id="editCustName" class="pill-input" value="${escapeHtml(customer.name)}" placeholder="Name">
-              <input id="editCustEmail" class="pill-input" value="${escapeHtml(customer.email)}" placeholder="Email">
-              <input id="editCustPhone" class="pill-input" value="${escapeHtml(customer.phone)}" placeholder="Phone">
-              <input id="editCustCountry" class="pill-input" value="${escapeHtml(customer.country)}" placeholder="Country">
-              <button id="saveCustEdit" class="btn-primary" style="width:100%">Save Changes</button>
-              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
-            modal.classList.add("show");
-            document.getElementById("saveCustEdit").onclick = async () => {
-                const updates = {
-                    name: document.getElementById("editCustName").value,
-                    email: document.getElementById("editCustEmail").value,
-                    phone: document.getElementById("editCustPhone").value,
-                    country: document.getElementById("editCustCountry").value
-                };
-                await db.ref(`customers/${customer.id}`).update(updates);
-                showToast("Customer updated", 'success');
-                modal.classList.remove("show");
-                refreshAll();
-            };
-            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
-        }
-
         // ----- Create Modals -----
         function openCreateModal(type) {
             const modal = document.getElementById("detailModal");
-            let title = type === 'company' ? 'Create Company' : type === 'station' ? 'Create Station' :
-            'Create Customer';
+            let title = type === 'company' ? 'Create Company' : type === 'station' ? 'Create Station' : 'Create User';
             let fields = '';
             if (type === 'company') {
                 fields = `
@@ -2999,13 +2937,13 @@
                   <input id="crStationPhone" class="pill-input" placeholder="Phone">
                   <input id="crStationCountry" class="pill-input" placeholder="Country Code (e.g. ZM)">
                   <button class="btn-primary" onclick="saveStation()">Create Station</button>`;
-            } else if (type === 'customer') {
+            } else if (type === 'user') {
                 fields = `
-                  <input id="crCustName" class="pill-input" placeholder="Customer Name">
-                  <input id="crCustEmail" class="pill-input" placeholder="Email">
-                  <input id="crCustPhone" class="pill-input" placeholder="Phone">
-                  <input id="crCustCountry" class="pill-input" placeholder="Country Code">
-                  <button class="btn-primary" onclick="saveCustomer()">Create Customer</button>`;
+                  <input id="crUserName" class="pill-input" placeholder="User Name">
+                  <input id="crUserEmail" class="pill-input" placeholder="Email">
+                  <input id="crUserPhone" class="pill-input" placeholder="Phone">
+                  <input id="crUserCountry" class="pill-input" placeholder="Country Code">
+                  <button class="btn-primary" onclick="saveUser()">Create User</button>`;
             }
             document.getElementById("modalContent").innerHTML = `
               <h3>${title}</h3>
@@ -3027,10 +2965,8 @@
                 return;
             }
             try {
-                // Create auth account for company
                 const userCred = await auth.createUserWithEmailAndPassword(email, password);
                 const uid = userCred.user.uid;
-                // Save company data
                 await db.ref(`stationOwners/${uid}`).set({
                     stationName: name,
                     email: email,
@@ -3080,17 +3016,17 @@
             }
         }
 
-        async function saveCustomer() {
-            const name = document.getElementById('crCustName').value.trim();
-            const email = document.getElementById('crCustEmail').value.trim();
-            const phone = document.getElementById('crCustPhone').value.trim();
-            const country = document.getElementById('crCustCountry').value.trim() || 'ZM';
+        async function saveUser() {
+            const name = document.getElementById('crUserName').value.trim();
+            const email = document.getElementById('crUserEmail').value.trim();
+            const phone = document.getElementById('crUserPhone').value.trim();
+            const country = document.getElementById('crUserCountry').value.trim() || 'ZM';
             if (!name || !email) {
                 showToast('Name and email required', 'error');
                 return;
             }
             try {
-                const ref = db.ref('customers').push();
+                const ref = db.ref('users').push();
                 await ref.set({
                     name: name,
                     email: email,
@@ -3098,7 +3034,7 @@
                     country: country,
                     createdAt: new Date().toISOString()
                 });
-                showToast('Customer created', 'success');
+                showToast('User created', 'success');
                 document.getElementById('detailModal').classList.remove('show');
                 refreshAll();
             } catch (error) {
@@ -3154,12 +3090,35 @@
                             data, borderColor: '#10b981', tension: 0.2 }] } }); }
         }
 
-        // ----- SYSTEM -----
+        // ----- SYSTEM (with Fleet toggle & delete forms) -----
         async function renderSystemControl() {
             const userMaint = (await db.ref("maintenance/userApp").once("value")).val() === true;
             const stationMaint = (await db.ref("maintenance/stationApp").once("value")).val() === true;
+            const fleetMaint = (await db.ref("maintenance/fleetApp").once("value")).val() === true;
             const html =
-                `<div class="chart-container"><div class="flex-between" style="margin-bottom:16px;"><span><strong><i class="fas fa-mobile-alt"></i> User App</strong><br><small>Shutdown all users</small></span><div class="ios-toggle ${userMaint?'active':''}" id="userToggle"><div class="toggle-knob"></div></div></div><div class="flex-between"><span><strong><i class="fas fa-charging-station"></i> Station Owner App</strong><br><small>Shutdown station dashboards</small></span><div class="ios-toggle ${stationMaint?'active':''}" id="stationToggle"><div class="toggle-knob"></div></div></div><div class="small-text mt-2"><i class="fas fa-info-circle"></i> Toggle to instantly shutdown respective apps (maintenance mode).</div></div>`;
+                `<div class="chart-container">
+              <div class="flex-between" style="margin-bottom:16px;">
+                <span><strong><i class="fas fa-mobile-alt"></i> User App</strong><br><small>Shutdown all users</small></span>
+                <div class="ios-toggle ${userMaint?'active':''}" id="userToggle"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="flex-between" style="margin-bottom:16px;">
+                <span><strong><i class="fas fa-charging-station"></i> Station Owner App</strong><br><small>Shutdown station dashboards</small></span>
+                <div class="ios-toggle ${stationMaint?'active':''}" id="stationToggle"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="flex-between" style="margin-bottom:16px;">
+                <span><strong><i class="fas fa-truck"></i> Fleet Management App</strong><br><small>Shutdown fleet dashboards</small></span>
+                <div class="ios-toggle ${fleetMaint?'active':''}" id="fleetToggle"><div class="toggle-knob"></div></div>
+              </div>
+              <div class="small-text mt-2"><i class="fas fa-info-circle"></i> Toggle to instantly shutdown respective apps (maintenance mode).</div>
+            </div>
+            <div class="chart-container" style="margin-top:16px;">
+              <h3 style="margin-bottom:12px;">🗑️ Delete Data</h3>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <button class="btn btn-red" onclick="deleteUserAppData()" style="width:100%;"><i class="fas fa-trash"></i> Delete User App Data</button>
+                <button class="btn btn-red" onclick="deleteStationAppData()" style="width:100%;"><i class="fas fa-trash"></i> Delete Station App Data</button>
+                <button class="btn btn-red" onclick="deleteDashboardData()" style="width:100%;"><i class="fas fa-trash"></i> Delete Dashboard Data</button>
+              </div>
+            </div>`;
             document.getElementById("contentArea").innerHTML = html;
             document.getElementById("userToggle")?.addEventListener("click", async () => { const newVal = !userMaint;
                 await db.ref("maintenance/userApp").set(newVal);
@@ -3169,13 +3128,40 @@
                 await db.ref("maintenance/stationApp").set(newVal);
                 showToast(newVal ? "Station app SHUT DOWN" : "Station app restored", 'info');
                 renderSystemControl(); });
+            document.getElementById("fleetToggle")?.addEventListener("click", async () => { const newVal = !fleetMaint;
+                await db.ref("maintenance/fleetApp").set(newVal);
+                showToast(newVal ? "Fleet app SHUT DOWN" : "Fleet app restored", 'info');
+                renderSystemControl(); });
+        }
+
+        async function deleteUserAppData() {
+            if (!confirm('Delete ALL user app data? This cannot be undone!')) return;
+            await db.ref('users').remove();
+            await db.ref('blocked/users').remove();
+            showToast('User app data deleted', 'success');
+            refreshAll();
+        }
+
+        async function deleteStationAppData() {
+            if (!confirm('Delete ALL station app data? This cannot be undone!')) return;
+            await db.ref('stationOwners').remove();
+            await db.ref('blocked/stations').remove();
+            showToast('Station app data deleted', 'success');
+            refreshAll();
+        }
+
+        async function deleteDashboardData() {
+            if (!confirm('Delete ALL dashboard data (payments, etc.)? This cannot be undone!')) return;
+            await db.ref('payments').remove();
+            await db.ref('revenue').remove();
+            showToast('Dashboard data deleted', 'success');
+            refreshAll();
         }
 
         // ----- RENDER CURRENT TAB -----
         function renderCurrentTab() {
             if (currentTab === "users") renderUsers();
             else if (currentTab === "stations") renderStations();
-            else if (currentTab === "customers") renderCustomers();
             else if (currentTab === "payments") renderPayments();
             else if (currentTab === "revenue") renderRevenueDashboard();
             else if (currentTab === "system") renderSystemControl();
@@ -3195,6 +3181,7 @@
             let html = `<div class="users-grid">`;
             companies.forEach(c => {
                 const avatar = c.logo || 'https://via.placeholder.com/150';
+                const unread = companyChats[c.id] || 0;
                 html += `
                 <div class="card" onclick="openCompanyChat('${c.id}')">
                   <div class="card-header">
@@ -3202,6 +3189,7 @@
                     <div>
                       <strong>${escapeHtml(c.stationName)}</strong>
                       <br><span style="font-size:0.7rem;">${escapeHtml(c.managerName)}</span>
+                      ${unread > 0 ? `<span class="badge badge-red" style="margin-left:6px;">${unread}</span>` : ''}
                     </div>
                   </div>
                   <div class="card-body">
@@ -3232,7 +3220,7 @@
                 isOnline: false,
                 lastSeen: null
             };
-            companyChats[companyId] = chatId;
+            companyChats[companyId] = 0;
             renderChatInterface();
             await loadMessages();
             showChatPage();
@@ -3298,6 +3286,12 @@
                         }
                         if (message.senderUid !== currentUser?.uid && !message.delivered) {
                             snapshot.ref.update({ delivered: true, status: 'delivered' });
+                        }
+                        // Update unread badge for this company
+                        if (message.senderUid !== currentUser?.uid) {
+                            const companyId = currentChat.uid;
+                            companyChats[companyId] = (companyChats[companyId] || 0) + 1;
+                            updateChatBadge(companyId);
                         }
                     }
                 });
@@ -3365,6 +3359,15 @@
             if (typingTimeout) { clearTimeout(typingTimeout);
                 typingTimeout = null; }
             isTyping = false;
+        }
+
+        function updateChatBadge(companyId) {
+            const badge = document.querySelector(`.card[onclick*="${companyId}"] .badge-red`);
+            if (badge) {
+                badge.textContent = companyChats[companyId] || 0;
+                if (companyChats[companyId] === 0) badge.style.display = 'none';
+                else badge.style.display = 'inline-block';
+            }
         }
 
         function showIncomingCallUI(callData) {
@@ -3444,6 +3447,12 @@
                     });
                 }
                 setTimeout(() => { scrollToBottom(); }, 50);
+                // Reset unread badge for this chat
+                if (currentChat) {
+                    const companyId = currentChat.uid;
+                    companyChats[companyId] = 0;
+                    updateChatBadge(companyId);
+                }
             } catch (error) {
                 console.error('Error loading messages:', error);
             }
