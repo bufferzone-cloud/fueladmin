@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>FuelRadar Admin · Full Control + Chat</title>
+    <title>FuelRadar Admin · Full Control</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#10b981">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,15 +31,12 @@
     <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.12.0/dist/emoji-picker.min.js">
     </script>
     <style>
-        /* ============================================================
-               RESET + ROOT
-            ============================================================ */
+        /* ========== RESET & ROOT ========== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         :root {
             --primary: #1A6B3C;
             --primary-dark: #0F4A2A;
@@ -83,22 +80,6 @@
             --font-xl: 1.1rem;
             --font-2xl: 1.35rem;
             --font-3xl: 1.7rem;
-            --white: #ffffff;
-            --white-98: #fafafa;
-            --white-95: #f2f2f2;
-            --gray-50: #f8f8f8;
-            --gray-100: #f0f0f0;
-            --gray-150: #e8e8e8;
-            --gray-200: #e0e0e0;
-            --gray-300: #d1d1d6;
-            --gray-400: #c7c7cc;
-            --gray-500: #8e8e93;
-            --gray-600: #6d6d72;
-            --gray-700: #48484a;
-            --gray-800: #3a3a3c;
-            --gray-900: #2c2c2e;
-            --black: #000000;
-            --blue-light: rgba(0, 122, 255, 0.1);
             --shadow-subtle: 0 2px 6px rgba(0, 0, 0, 0.08);
             --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.06);
             --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.08);
@@ -121,6 +102,22 @@
             --z-popover: 1060;
             --z-tooltip: 1070;
             --z-toast: 1080;
+            --white: #ffffff;
+            --white-98: #fafafa;
+            --white-95: #f2f2f2;
+            --gray-50: #f8f8f8;
+            --gray-100: #f0f0f0;
+            --gray-150: #e8e8e8;
+            --gray-200: #e0e0e0;
+            --gray-300: #d1d1d6;
+            --gray-400: #c7c7cc;
+            --gray-500: #8e8e93;
+            --gray-600: #6d6d72;
+            --gray-700: #48484a;
+            --gray-800: #3a3a3c;
+            --gray-900: #2c2c2e;
+            --black: #000000;
+            --blue-light: rgba(0, 122, 255, 0.1);
         }
 
         html {
@@ -128,7 +125,6 @@
             height: 100%;
             overflow: hidden;
         }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
             background: #f5f7fb;
@@ -142,7 +138,6 @@
             letter-spacing: -0.01em;
             font-weight: 400;
         }
-
         ::-webkit-scrollbar {
             width: 3px;
             height: 3px;
@@ -155,9 +150,7 @@
             border-radius: 20px;
         }
 
-        /* ============================================================
-               ADMIN DASHBOARD STYLES (ORIGINAL)
-            ============================================================ */
+        /* ========== ADMIN DASHBOARD STYLES ========== */
         .admin-container {
             max-width: 600px;
             margin: 0 auto;
@@ -168,7 +161,6 @@
             position: relative;
             z-index: 2;
         }
-
         .auth-card {
             background: rgba(20, 28, 32, 0.5) !important;
             backdrop-filter: blur(16px) !important;
@@ -182,7 +174,6 @@
             transition: transform 0.2s;
             margin: auto;
         }
-
         .auth-card h2 {
             font-size: 2rem;
             font-weight: 700;
@@ -202,7 +193,6 @@
             font-size: 0.9rem;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
-
         .glass-input {
             background: rgba(255, 255, 255, 0.2) !important;
             backdrop-filter: blur(8px);
@@ -226,7 +216,6 @@
             color: rgba(255, 255, 255, 0.7);
             font-weight: 400;
         }
-
         .btn-primary {
             background: #10b981;
             border: none;
@@ -260,7 +249,6 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
             background: white !important;
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -277,7 +265,6 @@
         .radar {
             color: #ef4444;
         }
-
         .logout-btn {
             background: #fff1f0;
             border: none;
@@ -324,7 +311,6 @@
             gap: 10px;
             background: white !important;
         }
-
         .stats-badge {
             background: #ecfdf5;
             padding: 4px 12px;
@@ -332,7 +318,6 @@
             font-size: 0.7rem;
             font-weight: 500;
         }
-
         .filter-group {
             display: flex;
             gap: 8px;
@@ -340,7 +325,6 @@
             border-radius: 60px;
             padding: 3px 6px;
         }
-
         .refresh-btn {
             background: white;
             border: 1px solid #cbd5e1;
@@ -368,7 +352,6 @@
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
-
         .bottom-nav .nav-item {
             display: flex;
             flex-direction: column;
@@ -400,7 +383,6 @@
             background: #10b981;
             border-radius: 0 0 8px 8px;
         }
-
         .nav-badge {
             position: absolute;
             top: -2px;
@@ -425,14 +407,13 @@
             flex: 1;
             overflow-y: auto;
         }
-
         .users-grid,
-        .stations-grid {
+        .stations-grid,
+        .customers-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 14px;
         }
-
         .card {
             background: white;
             border-radius: 24px;
@@ -441,7 +422,6 @@
             border: 1px solid #edf2f7;
             padding: 12px;
         }
-
         .card-header {
             display: flex;
             gap: 12px;
@@ -449,7 +429,6 @@
             border-bottom: 2px solid #ecfdf5;
             align-items: center;
         }
-
         .avatar {
             width: 44px;
             height: 44px;
@@ -462,11 +441,9 @@
             color: #059669;
             flex-shrink: 0;
         }
-
         .card-body {
             padding: 8px 0 0 0;
         }
-
         .info-row {
             display: flex;
             justify-content: space-between;
@@ -474,7 +451,6 @@
             font-size: 0.75rem;
             border-bottom: 1px solid #f1f5f9;
         }
-
         .location-badge {
             background: #eef2ff;
             padding: 4px 8px;
@@ -486,7 +462,6 @@
             margin-top: 8px;
             flex-wrap: wrap;
         }
-
         .action-btn {
             background: white;
             border: 1px solid #e2e8f0;
@@ -507,6 +482,10 @@
         .action-btn.success {
             border-color: #d1fae5;
             color: #0b5e42;
+        }
+        .action-btn.primary {
+            border-color: #bae6fd;
+            color: #0369a1;
         }
 
         .ios-toggle {
@@ -542,7 +521,6 @@
             padding: 10px;
             margin-bottom: 10px;
         }
-
         .chart-container {
             background: white;
             border-radius: 24px;
@@ -550,13 +528,11 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
-
         .revenue-summary {
             display: flex;
             gap: 12px;
             margin-bottom: 16px;
         }
-
         .revenue-card {
             background: white;
             border-radius: 20px;
@@ -584,7 +560,6 @@
         .modal-mask.show {
             display: flex;
         }
-
         .modal-sheet {
             background: white;
             max-width: 500px;
@@ -594,7 +569,6 @@
             max-height: 85vh;
             overflow-y: auto;
         }
-
         .flex-between {
             display: flex;
             justify-content: space-between;
@@ -621,7 +595,6 @@
             z-index: 9999;
             font-size: 0.75rem;
         }
-
         .pill-input {
             width: 100%;
             padding: 8px 12px;
@@ -630,7 +603,6 @@
             font-size: 0.85rem;
             margin-bottom: 8px;
         }
-
         .country-select {
             padding: 4px 8px;
             border: none;
@@ -639,7 +611,6 @@
             font-weight: 500;
             outline: none;
         }
-
         .search-box {
             display: flex;
             align-items: center;
@@ -661,9 +632,7 @@
             color: #94a3b8;
         }
 
-        /* ============================================================
-               CHAT / CALL STYLES (FROM ZYNAPSE)
-            ============================================================ */
+        /* ========== CHAT / CALL STYLES ========== */
         .chat-page {
             position: fixed;
             inset: 0;
@@ -676,11 +645,9 @@
             margin: 0 !important;
             border-radius: 0 !important;
         }
-
         .chat-page.active {
             display: flex;
         }
-
         @keyframes slideIn {
             from {
                 transform: translateX(100%);
@@ -689,7 +656,6 @@
                 transform: translateX(0);
             }
         }
-
         .chat-header {
             background: var(--white);
             padding: calc(var(--space-2) * 1.25) calc(var(--space-3) * 1.25);
@@ -702,7 +668,6 @@
             box-shadow: var(--shadow-light);
             border-radius: 0 !important;
         }
-
         .chat-back-btn {
             background: none;
             border: none;
@@ -719,11 +684,9 @@
             height: calc(28px * 1.25);
             flex-shrink: 0;
         }
-
         .chat-back-btn:hover {
             background: rgba(255, 59, 48, 0.08);
         }
-
         .chat-user-info {
             display: flex;
             align-items: center;
@@ -732,7 +695,6 @@
             min-width: 0;
             cursor: pointer;
         }
-
         .chat-user-avatar {
             width: calc(36px * 1.25);
             height: calc(36px * 1.25);
@@ -742,7 +704,6 @@
             flex-shrink: 0;
             position: relative;
         }
-
         .chat-user-avatar.online::after {
             content: '';
             position: absolute;
@@ -754,12 +715,10 @@
             border-radius: var(--radius-circle);
             border: calc(2px * 1.25) solid var(--white);
         }
-
         .chat-user-details {
             flex: 1;
             min-width: 0;
         }
-
         .chat-user-name {
             font-size: calc(14px * 1.25);
             font-weight: 600;
@@ -769,7 +728,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
         .chat-user-status {
             display: flex;
             align-items: center;
@@ -777,19 +735,16 @@
             font-size: calc(11px * 1.25);
             color: var(--gray-600);
         }
-
         .chat-status-dot {
             width: calc(6px * 1.25);
             height: calc(6px * 1.25);
             border-radius: var(--radius-circle);
             background: var(--gray-400);
         }
-
         .chat-status-dot.online {
             background: var(--green);
             animation: pulse 2s infinite;
         }
-
         @keyframes pulse {
             0% {
                 opacity: 1;
@@ -801,13 +756,11 @@
                 opacity: 1;
             }
         }
-
         .chat-header-actions {
             display: flex;
             gap: calc(4px * 1.25);
             flex-shrink: 0;
         }
-
         .chat-action-btn {
             background: none;
             border: none;
@@ -823,19 +776,16 @@
             align-items: center;
             justify-content: center;
         }
-
         .chat-action-btn:hover {
             background: var(--gray-100);
             color: var(--red);
         }
-
         .chat-messages-container {
             flex: 1;
             overflow: hidden;
             position: relative;
             background: var(--white);
         }
-
         .chat-messages {
             height: 100%;
             overflow-y: auto;
@@ -847,7 +797,6 @@
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
         }
-
         .chat-messages-empty {
             display: flex;
             flex-direction: column;
@@ -899,7 +848,6 @@
             align-self: flex-end;
             flex-direction: row-reverse;
         }
-
         .message-bubble {
             display: flex !important;
             flex-wrap: wrap !important;
@@ -910,7 +858,6 @@
             padding: 10px 14px !important;
             border-radius: 18px !important;
         }
-
         .message-container.received .message-bubble {
             background: #ffe5e7 !important;
             color: #000;
@@ -931,7 +878,6 @@
             border-bottom: 0;
             transform: rotate(45deg);
         }
-
         .message-container.sent .message-bubble {
             background: linear-gradient(135deg, #ff3b30, #ff2d55) !important;
             color: white;
@@ -962,7 +908,6 @@
             margin-bottom: 0 !important;
             width: auto !important;
         }
-
         .message-time {
             flex: 0 0 auto !important;
             white-space: nowrap !important;
@@ -1376,39 +1321,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        .message-sender-name {
-            flex: 0 0 100% !important;
-            font-size: 11px;
-            font-weight: 600;
-            color: #007aff;
-            margin-bottom: 4px;
-            width: 100% !important;
-        }
-        .message-container.received.group-message {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            align-items: flex-end;
-            gap: 8px;
-            margin-bottom: calc(2px * 1.25);
-            max-width: 95% !important;
-            align-self: flex-start;
-            position: relative;
-        }
-        .message-avatar {
-            flex-shrink: 0;
-            width: 40px !important;
-            height: 40px !important;
-            margin-right: 0 !important;
-            border-radius: 50%;
-        }
-        .message-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50% !important;
-            object-fit: cover;
-        }
-
         /* ===== CHAT INPUT ===== */
         .chat-input-container {
             background: var(--white);
@@ -1521,6 +1433,31 @@
             cursor: not-allowed;
             transform: none !important;
         }
+        .chat-voice-btn {
+            background: none;
+            border: none;
+            color: var(--blue);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+        .chat-voice-btn:hover {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--red);
+        }
+        .chat-voice-btn i {
+            transition: transform 0.2s;
+        }
+        .chat-voice-btn:hover i {
+            transform: scale(1.1);
+        }
 
         .attachment-options {
             position: absolute;
@@ -1582,7 +1519,6 @@
             display: block;
         }
 
-        /* ===== VOICE RECORDING UI ===== */
         .voice-recording-ui {
             position: fixed;
             bottom: calc(70px * 1.25);
@@ -1634,7 +1570,6 @@
             text-align: center;
         }
 
-        /* ===== MODAL OVERLAY ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -1986,7 +1921,6 @@
             transform: scale(1.1);
         }
 
-        /* ===== TOAST CONTAINER ===== */
         .toast-container {
             position: fixed;
             top: 14px;
@@ -2040,92 +1974,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (min-width: 600px) {
-            .users-grid,
-            .stations-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        @media (max-width: 420px) {
-            .auth-card {
-                padding: 24px 16px !important;
-            }
-            .auth-card h2 {
-                font-size: 1.6rem;
-            }
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 480px) {
-            .modal-content {
-                width: 95vw;
-                max-height: 90vh;
-                border-radius: var(--radius-lg);
-                max-width: 100%;
-            }
-            .modal-body {
-                padding: var(--space-2);
-            }
-            .chat-messages {
-                padding: var(--space-2);
-            }
-            .chat-input-container {
-                padding: 8px 12px;
-            }
-            .toast-container {
-                left: 8px;
-                right: 8px;
-                max-width: none;
-                top: 8px;
-            }
-            .toast {
-                max-width: 100%;
-            }
-            .incoming-call-fullscreen .answer-btn,
-            .incoming-call-fullscreen .reject-btn {
-                max-width: 150px;
-                padding: 14px 0;
-                font-size: 18px;
-            }
-            .incoming-call-fullscreen .incoming-call-id {
-                top: calc(50% + 60px);
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        .hidden {
-            display: none !important;
-        }
-        .text-truncate {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .flex-column {
-            display: flex;
-            flex-direction: column;
-        }
-        .flex-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
         }
 
         .detail-section {
@@ -2273,12 +2121,17 @@
             color: var(--accent);
             font-size: 0.9rem;
         }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
     </style>
 </head>
 <body>
 
     <!-- ============================================================
-    ADMIN DASHBOARD (ORIGINAL)
+    ADMIN DASHBOARD
     ============================================================ -->
     <div class="admin-container">
         <!-- Install prompt banner -->
@@ -2323,10 +2176,11 @@
         </div>
     </div>
 
-    <!-- BOTTOM NAV (ADMIN) -->
+    <!-- BOTTOM NAV -->
     <div class="bottom-nav" id="bottomNav" style="display:none;">
         <button class="nav-item" data-nav="users"><i class="fas fa-users"></i><span>Users</span></button>
         <button class="nav-item" data-nav="stations"><i class="fas fa-gas-pump"></i><span>Stations</span></button>
+        <button class="nav-item" data-nav="customers"><i class="fas fa-user-friends"></i><span>Customers</span></button>
         <button class="nav-item" data-nav="payments"><i class="fas fa-credit-card"></i><span>Payments</span></button>
         <button class="nav-item" data-nav="revenue"><i class="fas fa-chart-line"></i><span>Revenue</span></button>
         <button class="nav-item" data-nav="system"><i class="fas fa-power-off"></i><span>Shutdown</span></button>
@@ -2585,7 +2439,7 @@
     ============================================================ -->
     <script>
         // ================================================================
-        // 1. FIREBASE CONFIG (same as original admin)
+        // FIREBASE CONFIG
         // ================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCzf9dZFB0l7ZEPLJ4tpo4bSjgQNW3VTus",
@@ -2602,20 +2456,19 @@
         const firestore = firebase.firestore();
 
         // ================================================================
-        // 2. ORIGINAL ADMIN GLOBALS
+        // GLOBALS
         // ================================================================
         let allUsers = [],
             allStations = [],
-            allPayments = [];
+            allPayments = [],
+            allCustomers = [];
         let currentTab = "users";
         let searchTerm = "";
         let selectedCountry = "all";
         let revenueChart = null;
         let currentUser = null;
 
-        // ================================================================
-        // 3. CHAT / CALL GLOBALS (from Zynapse)
-        // ================================================================
+        // Chat globals
         let currentChat = null;
         let currentChatId = null;
         let contacts = [];
@@ -2657,7 +2510,7 @@
         let notificationSound = new Audio('notification.mp3');
         let sentSound = new Audio('sent.mp3');
         let messageSearchResults = [];
-        let companyChats = {}; // admin specific: map companyId -> chatId
+        let companyChats = {};
 
         // WebRTC & Call state
         let localStream = null;
@@ -2691,11 +2544,6 @@
             }]
         };
 
-        let callDocListener = null;
-        let callerCandidateListener = null;
-        let receiverCandidateListener = null;
-
-        // Firebase refs
         const usersRef = db.ref('users');
         const chatsRef = db.ref('chats');
         const messagesRef = db.ref('messages');
@@ -2715,7 +2563,7 @@
         };
 
         // ================================================================
-        // 4. UTILITY FUNCTIONS
+        // UTILITY FUNCTIONS
         // ================================================================
         function showToast(msg, type) {
             const container = document.getElementById('toastContainer');
@@ -2783,12 +2631,6 @@
             return mins + ':' + secs.toString().padStart(2, '0');
         }
 
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
         function getMessagePreview(type, message) {
             if (!message) return 'No messages yet';
             switch (type) {
@@ -2822,16 +2664,8 @@
         }
 
         // ================================================================
-        // 5. ORIGINAL ADMIN FUNCTIONS (unchanged)
+        // ORIGINAL ADMIN FUNCTIONS
         // ================================================================
-        function showToastAdmin(msg, isError) {
-            const toast = document.getElementById("toastMsg");
-            toast.textContent = msg;
-            toast.style.backgroundColor = isError ? "#dc2626" : "#10b981";
-            toast.style.display = "block";
-            setTimeout(() => toast.style.display = "none", 2500);
-        }
-
         const countryNames = {
             "ZM": "Zambia",
             "ZA": "South Africa",
@@ -2877,60 +2711,11 @@
             modal.classList.add("show");
             setTimeout(() => {
                 const map = L.map('modalMap').setView([lat, lng], 15);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: 'OSM'
-                }).addTo(map);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: 'OSM' })
+                    .addTo(map);
                 L.marker([lat, lng]).addTo(map).bindPopup(title).openPopup();
             }, 100);
             document.getElementById("closeMapModal").onclick = () => modal.classList.remove("show");
-        }
-
-        function showEditUserModal(user) {
-            const modal = document.getElementById("detailModal");
-            document.getElementById("modalContent").innerHTML = `
-              <h3>✏️ Edit User</h3>
-              <input id="editUserName" class="pill-input" value="${escapeHtml(user.name)}" placeholder="Name">
-              <input id="editUserPhone" class="pill-input" value="${escapeHtml(user.phone)}" placeholder="Phone">
-              <input id="editUserCountry" class="pill-input" value="${escapeHtml(user.country)}" placeholder="Country code (e.g., ZM)">
-              <button id="saveUserEdit" class="btn-primary" style="width:100%">Save Changes</button>
-              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
-            modal.classList.add("show");
-            document.getElementById("saveUserEdit").onclick = async () => {
-                const newName = document.getElementById("editUserName").value;
-                const newPhone = document.getElementById("editUserPhone").value;
-                const newCountry = document.getElementById("editUserCountry").value;
-                await db.ref(`users/${user.id}`).update({ name: newName, phone: newPhone, country: newCountry });
-                showToastAdmin("User updated");
-                modal.classList.remove("show");
-                refreshAll();
-            };
-            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
-        }
-
-        function showEditStationModal(station) {
-            const modal = document.getElementById("detailModal");
-            document.getElementById("modalContent").innerHTML = `
-              <h3>✏️ Edit Station</h3>
-              <input id="editStationName" class="pill-input" value="${escapeHtml(station.stationName)}" placeholder="Station Name">
-              <input id="editManagerName" class="pill-input" value="${escapeHtml(station.managerName)}" placeholder="Manager Name">
-              <input id="editStationPhone" class="pill-input" value="${escapeHtml(station.phone)}" placeholder="Phone">
-              <input id="editStationCountry" class="pill-input" value="${escapeHtml(station.country)}" placeholder="Country code">
-              <button id="saveStationEdit" class="btn-primary" style="width:100%">Save Changes</button>
-              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
-            modal.classList.add("show");
-            document.getElementById("saveStationEdit").onclick = async () => {
-                const updates = {
-                    stationName: document.getElementById("editStationName").value,
-                    managerName: document.getElementById("editManagerName").value,
-                    phone: document.getElementById("editStationPhone").value,
-                    country: document.getElementById("editStationCountry").value
-                };
-                await db.ref(`stationOwners/${station.id}`).update(updates);
-                showToastAdmin("Station updated");
-                modal.classList.remove("show");
-                refreshAll();
-            };
-            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
         }
 
         async function loadUsers() {
@@ -2953,12 +2738,23 @@
             for (const [id, data] of Object.entries(snap.val() || {})) {
                 stations.push({ id, stationName: data.stationName || "", managerName: data.managerName || "",
                     email: data.email || "", phone: data.phone || "", country: data.country || "",
-                    location: data.location || null, isBlocked: false });
+                    location: data.location || null, isBlocked: false, logo: data.logo || '', registration: data
+                        .registration || '', zraDocs: data.zraDocs || '' });
             }
             const blocked = (await db.ref("blocked/stations").once("value")).val() || {};
             stations.forEach(s => s.isBlocked = blocked[s.id] === true);
             allStations = stations;
             return stations;
+        }
+
+        async function loadCustomers() {
+            const snap = await db.ref("customers").once("value");
+            const customers = [];
+            if (snap.val()) {
+                Object.entries(snap.val()).forEach(([id, data]) => customers.push({ id, ...data }));
+            }
+            allCustomers = customers;
+            return customers;
         }
 
         async function loadPayments() {
@@ -2973,7 +2769,7 @@
         }
 
         async function refreshAll() {
-            await Promise.all([loadUsers(), loadStations(), loadPayments()]);
+            await Promise.all([loadUsers(), loadStations(), loadCustomers(), loadPayments()]);
             renderCurrentTab();
             updateCountryFilter();
         }
@@ -2982,6 +2778,7 @@
             const countries = new Set();
             if (currentTab === "users") allUsers.forEach(u => u.country && countries.add(u.country));
             else if (currentTab === "stations") allStations.forEach(s => s.country && countries.add(s.country));
+            else if (currentTab === "customers") allCustomers.forEach(c => c.country && countries.add(c.country));
             const select = document.getElementById("countryFilter");
             if (select) {
                 select.innerHTML = '<option value="all">🌍 All countries</option>';
@@ -2991,6 +2788,7 @@
             }
         }
 
+        // ----- USERS -----
         async function renderUsers() {
             let filtered = allUsers.filter(u => (u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase()
                 .includes(searchTerm)) && (selectedCountry === "all" || u.country === selectedCountry));
@@ -3021,44 +2819,73 @@
             document.querySelectorAll("[data-blockuser]").forEach(btn => btn.onclick = async () => { const uid = btn
                     .dataset.blockuser,
                     curr = btn.dataset.blocked === "true"; await db.ref(`blocked/users/${uid}`).set(!curr);
-                showToastAdmin(curr ? "Unblocked" : "Blocked");
+                showToast(curr ? "Unblocked" : "Blocked", 'success');
                 refreshAll(); });
         }
 
+        function showEditUserModal(user) {
+            const modal = document.getElementById("detailModal");
+            document.getElementById("modalContent").innerHTML = `
+              <h3>✏️ Edit User</h3>
+              <input id="editUserName" class="pill-input" value="${escapeHtml(user.name)}" placeholder="Name">
+              <input id="editUserPhone" class="pill-input" value="${escapeHtml(user.phone)}" placeholder="Phone">
+              <input id="editUserCountry" class="pill-input" value="${escapeHtml(user.country)}" placeholder="Country code (e.g., ZM)">
+              <button id="saveUserEdit" class="btn-primary" style="width:100%">Save Changes</button>
+              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
+            modal.classList.add("show");
+            document.getElementById("saveUserEdit").onclick = async () => {
+                const newName = document.getElementById("editUserName").value;
+                const newPhone = document.getElementById("editUserPhone").value;
+                const newCountry = document.getElementById("editUserCountry").value;
+                await db.ref(`users/${user.id}`).update({ name: newName, phone: newPhone, country: newCountry });
+                showToast("User updated", 'success');
+                modal.classList.remove("show");
+                refreshAll();
+            };
+            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
+        }
+
+        // ----- STATIONS (with Create Company & Create Station) -----
         async function renderStations() {
             let filtered = allStations.filter(s => (s.stationName.toLowerCase().includes(searchTerm) || s.managerName
                 .toLowerCase().includes(searchTerm)) && (selectedCountry === "all" || s.country === selectedCountry));
             document.getElementById("statsBadge").innerHTML =
                 `<i class="fas fa-gas-pump"></i> ${filtered.length} / ${allStations.length}`;
-            if (!filtered.length) { document.getElementById("contentArea").innerHTML =
-                `<div class="stats-badge">No stations</div>`; return; }
-            let html = `<div class="stations-grid">`;
-            for (const s of filtered) {
-                let locHtml = "No location";
-                if (s.location?.lat && s.location?.lng) {
-                    const addr = await getAddressLine(s.location.lat, s.location.lng);
-                    locHtml =
-                        `${addr} <button class="action-btn view-station-loc" data-lat="${s.location.lat}" data-lng="${s.location.lng}" data-name="${escapeHtml(s.stationName)}">🗺️</button>`;
+            let html = `
+              <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                <button class="btn btn-green" onclick="openCreateModal('company')"><i class="fas fa-plus"></i> Create Company</button>
+                <button class="btn btn-green" onclick="openCreateModal('station')"><i class="fas fa-plus"></i> Create Station</button>
+              </div>`;
+            if (!filtered.length) { html += `<div class="stats-badge">No stations</div>`; } else {
+                html += `<div class="stations-grid">`;
+                for (const s of filtered) {
+                    let locHtml = "No location";
+                    if (s.location?.lat && s.location?.lng) {
+                        const addr = await getAddressLine(s.location.lat, s.location.lng);
+                        locHtml =
+                            `${addr} <button class="action-btn view-station-loc" data-lat="${s.location.lat}" data-lng="${s.location.lng}" data-name="${escapeHtml(s.stationName)}">🗺️</button>`;
+                    }
+                    const isActive = !s.isBlocked;
+                    html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-gas-pump"></i></div><div><strong>${escapeHtml(s.stationName)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(s.managerName)}</span></div></div>
+                  <div class="card-body"><div class="info-row"><span>📧 Email</span><span>${escapeHtml(s.email)}</span></div>
+                  <div class="info-row"><span>📞 Phone</span><span>${escapeHtml(s.phone||"—")}</span></div>
+                  <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(s.country)}</span></div>
+                  <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
+                  <div class="flex-between"><span><strong>App Control</strong></span><div class="ios-toggle ${isActive?'active':''}" data-station="${s.id}" data-current="${!s.isBlocked}"><div class="toggle-knob"></div></div></div>
+                  <div><button class="action-btn edit-station" data-sid="${s.id}">✏️ Edit</button><button class="action-btn view-station-payments" data-sid="${s.id}" data-name="${escapeHtml(s.stationName)}">💳 Payments</button>
+                  <button class="action-btn primary" onclick="openCompanyChat('${s.id}')"><i class="fas fa-comment"></i> Chat</button></div></div></div>`;
                 }
-                const isActive = !s.isBlocked;
-                html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-gas-pump"></i></div><div><strong>${escapeHtml(s.stationName)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(s.managerName)}</span></div></div>
-              <div class="card-body"><div class="info-row"><span>📧 Email</span><span>${escapeHtml(s.email)}</span></div>
-              <div class="info-row"><span>📞 Phone</span><span>${escapeHtml(s.phone||"—")}</span></div>
-              <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(s.country)}</span></div>
-              <div class="location-badge"><i class="fas fa-map-marker-alt"></i> ${locHtml}</div>
-              <div class="flex-between"><span><strong>App Control</strong></span><div class="ios-toggle ${isActive?'active':''}" data-station="${s.id}" data-current="${!s.isBlocked}"><div class="toggle-knob"></div></div></div>
-              <div><button class="action-btn edit-station" data-sid="${s.id}">✏️ Edit</button><button class="action-btn view-station-payments" data-sid="${s.id}" data-name="${escapeHtml(s.stationName)}">💳 Payments</button></div></div></div>`;
+                html += `</div>`;
             }
-            html += `</div>`;
             document.getElementById("contentArea").innerHTML = html;
-            document.querySelectorAll(".view-station-loc").forEach(btn => btn.onclick = () => showLocationMap(parseFloat(
-                btn.dataset.lat), parseFloat(btn.dataset.lng), btn.dataset.name));
+            document.querySelectorAll(".view-station-loc").forEach(btn => btn.onclick = () => showLocationMap(
+                parseFloat(btn.dataset.lat), parseFloat(btn.dataset.lng), btn.dataset.name));
             document.querySelectorAll(".edit-station").forEach(btn => { const st = allStations.find(x => x.id === btn
                     .dataset.sid); if (st) showEditStationModal(st); });
             document.querySelectorAll(".ios-toggle").forEach(toggle => toggle.onclick = async (e) => { e
                     .stopPropagation(); const sid = toggle.dataset.station,
                     currActive = toggle.dataset.current === "true"; await db.ref(`blocked/stations/${sid}`).set(!
-                    currActive); showToastAdmin(!currActive ? "Station app shutdown" : "Station restored");
+                    currActive); showToast(!currActive ? "Station app shutdown" : "Station restored", 'info');
                 refreshAll(); });
             document.querySelectorAll(".view-station-payments").forEach(btn => btn.onclick = () => { const sid = btn
                     .dataset.sid,
@@ -3072,6 +2899,214 @@
                 document.getElementById("closeModalBtn").onclick = () => modal.classList.remove("show"); });
         }
 
+        function showEditStationModal(station) {
+            const modal = document.getElementById("detailModal");
+            document.getElementById("modalContent").innerHTML = `
+              <h3>✏️ Edit Station</h3>
+              <input id="editStationName" class="pill-input" value="${escapeHtml(station.stationName)}" placeholder="Station Name">
+              <input id="editManagerName" class="pill-input" value="${escapeHtml(station.managerName)}" placeholder="Manager Name">
+              <input id="editStationPhone" class="pill-input" value="${escapeHtml(station.phone)}" placeholder="Phone">
+              <input id="editStationCountry" class="pill-input" value="${escapeHtml(station.country)}" placeholder="Country code">
+              <button id="saveStationEdit" class="btn-primary" style="width:100%">Save Changes</button>
+              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
+            modal.classList.add("show");
+            document.getElementById("saveStationEdit").onclick = async () => {
+                const updates = {
+                    stationName: document.getElementById("editStationName").value,
+                    managerName: document.getElementById("editManagerName").value,
+                    phone: document.getElementById("editStationPhone").value,
+                    country: document.getElementById("editStationCountry").value
+                };
+                await db.ref(`stationOwners/${station.id}`).update(updates);
+                showToast("Station updated", 'success');
+                modal.classList.remove("show");
+                refreshAll();
+            };
+            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
+        }
+
+        // ----- CUSTOMERS -----
+        async function renderCustomers() {
+            let filtered = allCustomers.filter(c => (c.name.toLowerCase().includes(searchTerm) || c.email.toLowerCase()
+                .includes(searchTerm)) && (selectedCountry === "all" || c.country === selectedCountry));
+            document.getElementById("statsBadge").innerHTML =
+                `<i class="fas fa-user-friends"></i> ${filtered.length} / ${allCustomers.length}`;
+            let html =
+                `<div style="display:flex;gap:8px;margin-bottom:12px;"><button class="btn btn-green" onclick="openCreateModal('customer')"><i class="fas fa-plus"></i> Create Customer</button></div>`;
+            if (!filtered.length) { html += `<div class="stats-badge">No customers</div>`; } else {
+                html += `<div class="customers-grid">`;
+                for (const c of filtered) {
+                    html += `<div class="card"><div class="card-header"><div class="avatar"><i class="fas fa-user"></i></div><div><strong>${escapeHtml(c.name)}</strong><br><span style="font-size:0.7rem;">${escapeHtml(c.email)}</span></div></div>
+                  <div class="card-body"><div class="info-row"><span>📞 Phone</span><span>${escapeHtml(c.phone||"—")}</span></div>
+                  <div class="info-row"><span>🌍 Country</span><span>${getFullCountry(c.country)}</span></div>
+                  <div class="info-row"><span>📧 Email</span><span>${escapeHtml(c.email)}</span></div>
+                  <div><button class="action-btn edit-customer" data-cid="${c.id}">✏️ Edit</button></div></div></div>`;
+                }
+                html += `</div>`;
+            }
+            document.getElementById("contentArea").innerHTML = html;
+            document.querySelectorAll(".edit-customer").forEach(btn => btn.onclick = () => { const c = allCustomers
+                    .find(x => x.id === btn.dataset.cid); if (c) showEditCustomerModal(c); });
+        }
+
+        function showEditCustomerModal(customer) {
+            const modal = document.getElementById("detailModal");
+            document.getElementById("modalContent").innerHTML = `
+              <h3>✏️ Edit Customer</h3>
+              <input id="editCustName" class="pill-input" value="${escapeHtml(customer.name)}" placeholder="Name">
+              <input id="editCustEmail" class="pill-input" value="${escapeHtml(customer.email)}" placeholder="Email">
+              <input id="editCustPhone" class="pill-input" value="${escapeHtml(customer.phone)}" placeholder="Phone">
+              <input id="editCustCountry" class="pill-input" value="${escapeHtml(customer.country)}" placeholder="Country">
+              <button id="saveCustEdit" class="btn-primary" style="width:100%">Save Changes</button>
+              <button id="closeEditModal" class="action-btn" style="margin-top:8px;">Cancel</button>`;
+            modal.classList.add("show");
+            document.getElementById("saveCustEdit").onclick = async () => {
+                const updates = {
+                    name: document.getElementById("editCustName").value,
+                    email: document.getElementById("editCustEmail").value,
+                    phone: document.getElementById("editCustPhone").value,
+                    country: document.getElementById("editCustCountry").value
+                };
+                await db.ref(`customers/${customer.id}`).update(updates);
+                showToast("Customer updated", 'success');
+                modal.classList.remove("show");
+                refreshAll();
+            };
+            document.getElementById("closeEditModal").onclick = () => modal.classList.remove("show");
+        }
+
+        // ----- Create Modals -----
+        function openCreateModal(type) {
+            const modal = document.getElementById("detailModal");
+            let title = type === 'company' ? 'Create Company' : type === 'station' ? 'Create Station' :
+            'Create Customer';
+            let fields = '';
+            if (type === 'company') {
+                fields = `
+                  <input id="crCompanyName" class="pill-input" placeholder="Company Name">
+                  <input id="crCompanyEmail" class="pill-input" placeholder="Company Email">
+                  <input id="crCompanyPassword" class="pill-input" type="password" placeholder="Password">
+                  <input id="crCompanyPhone" class="pill-input" placeholder="Phone">
+                  <input id="crCompanyLogo" class="pill-input" placeholder="Logo URL (optional)">
+                  <input id="crCompanyReg" class="pill-input" placeholder="Registration Doc URL (optional)">
+                  <input id="crCompanyZRA" class="pill-input" placeholder="ZRA Doc URL (optional)">
+                  <button class="btn-primary" onclick="saveCompany()">Create Company</button>`;
+            } else if (type === 'station') {
+                fields = `
+                  <input id="crStationName" class="pill-input" placeholder="Station Name">
+                  <input id="crStationManager" class="pill-input" placeholder="Manager Name">
+                  <input id="crStationEmail" class="pill-input" placeholder="Email">
+                  <input id="crStationPhone" class="pill-input" placeholder="Phone">
+                  <input id="crStationCountry" class="pill-input" placeholder="Country Code (e.g. ZM)">
+                  <button class="btn-primary" onclick="saveStation()">Create Station</button>`;
+            } else if (type === 'customer') {
+                fields = `
+                  <input id="crCustName" class="pill-input" placeholder="Customer Name">
+                  <input id="crCustEmail" class="pill-input" placeholder="Email">
+                  <input id="crCustPhone" class="pill-input" placeholder="Phone">
+                  <input id="crCustCountry" class="pill-input" placeholder="Country Code">
+                  <button class="btn-primary" onclick="saveCustomer()">Create Customer</button>`;
+            }
+            document.getElementById("modalContent").innerHTML = `
+              <h3>${title}</h3>
+              ${fields}
+              <button class="action-btn" onclick="document.getElementById('detailModal').classList.remove('show')" style="margin-top:8px;">Cancel</button>`;
+            modal.classList.add("show");
+        }
+
+        async function saveCompany() {
+            const name = document.getElementById('crCompanyName').value.trim();
+            const email = document.getElementById('crCompanyEmail').value.trim();
+            const password = document.getElementById('crCompanyPassword').value.trim();
+            const phone = document.getElementById('crCompanyPhone').value.trim();
+            const logo = document.getElementById('crCompanyLogo').value.trim();
+            const reg = document.getElementById('crCompanyReg').value.trim();
+            const zra = document.getElementById('crCompanyZRA').value.trim();
+            if (!name || !email || !password || !phone) {
+                showToast('Name, email, password, phone required', 'error');
+                return;
+            }
+            try {
+                // Create auth account for company
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCred.user.uid;
+                // Save company data
+                await db.ref(`stationOwners/${uid}`).set({
+                    stationName: name,
+                    email: email,
+                    phone: phone,
+                    country: 'ZM',
+                    logo: logo || '',
+                    registration: reg || '',
+                    zraDocs: zra || '',
+                    userId: uid,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Company created successfully', 'success');
+                document.getElementById('detailModal').classList.remove('show');
+                refreshAll();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function saveStation() {
+            const name = document.getElementById('crStationName').value.trim();
+            const manager = document.getElementById('crStationManager').value.trim();
+            const email = document.getElementById('crStationEmail').value.trim();
+            const phone = document.getElementById('crStationPhone').value.trim();
+            const country = document.getElementById('crStationCountry').value.trim() || 'ZM';
+            if (!name || !manager || !email) {
+                showToast('Name, manager, email required', 'error');
+                return;
+            }
+            try {
+                const ref = db.ref('stationOwners').push();
+                await ref.set({
+                    stationName: name,
+                    managerName: manager,
+                    email: email,
+                    phone: phone || '',
+                    country: country,
+                    location: null,
+                    isBlocked: false,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Station created', 'success');
+                document.getElementById('detailModal').classList.remove('show');
+                refreshAll();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function saveCustomer() {
+            const name = document.getElementById('crCustName').value.trim();
+            const email = document.getElementById('crCustEmail').value.trim();
+            const phone = document.getElementById('crCustPhone').value.trim();
+            const country = document.getElementById('crCustCountry').value.trim() || 'ZM';
+            if (!name || !email) {
+                showToast('Name and email required', 'error');
+                return;
+            }
+            try {
+                const ref = db.ref('customers').push();
+                await ref.set({
+                    name: name,
+                    email: email,
+                    phone: phone || '',
+                    country: country,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Customer created', 'success');
+                document.getElementById('detailModal').classList.remove('show');
+                refreshAll();
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        // ----- PAYMENTS -----
         function renderPayments() {
             const pending = allPayments.filter(p => p.status === "pending");
             const approved = allPayments.filter(p => p.status === "approved");
@@ -3086,14 +3121,15 @@
             document.getElementById("contentArea").innerHTML = html;
             document.querySelectorAll("[data-approve]").forEach(btn => btn.onclick = async () => { await db.ref(
                     `payments/${btn.dataset.approve}`).update({ status: "approved" });
-                showToastAdmin("Approved");
+                showToast("Approved", 'success');
                 refreshAll(); });
             document.querySelectorAll("[data-reject]").forEach(btn => btn.onclick = async () => { await db.ref(
                     `payments/${btn.dataset.reject}`).update({ status: "rejected" });
-                showToastAdmin("Rejected");
+                showToast("Rejected", 'info');
                 refreshAll(); });
         }
 
+        // ----- REVENUE -----
         function renderRevenueDashboard() {
             const approved = allPayments.filter(p => p.status === "approved");
             const total = approved.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
@@ -3118,6 +3154,7 @@
                             data, borderColor: '#10b981', tension: 0.2 }] } }); }
         }
 
+        // ----- SYSTEM -----
         async function renderSystemControl() {
             const userMaint = (await db.ref("maintenance/userApp").once("value")).val() === true;
             const stationMaint = (await db.ref("maintenance/stationApp").once("value")).val() === true;
@@ -3126,17 +3163,19 @@
             document.getElementById("contentArea").innerHTML = html;
             document.getElementById("userToggle")?.addEventListener("click", async () => { const newVal = !userMaint;
                 await db.ref("maintenance/userApp").set(newVal);
-                showToastAdmin(newVal ? "User app SHUT DOWN" : "User app restored");
+                showToast(newVal ? "User app SHUT DOWN" : "User app restored", 'info');
                 renderSystemControl(); });
             document.getElementById("stationToggle")?.addEventListener("click", async () => { const newVal = !stationMaint;
                 await db.ref("maintenance/stationApp").set(newVal);
-                showToastAdmin(newVal ? "Station app SHUT DOWN" : "Station app restored");
+                showToast(newVal ? "Station app SHUT DOWN" : "Station app restored", 'info');
                 renderSystemControl(); });
         }
 
+        // ----- RENDER CURRENT TAB -----
         function renderCurrentTab() {
             if (currentTab === "users") renderUsers();
             else if (currentTab === "stations") renderStations();
+            else if (currentTab === "customers") renderCustomers();
             else if (currentTab === "payments") renderPayments();
             else if (currentTab === "revenue") renderRevenueDashboard();
             else if (currentTab === "system") renderSystemControl();
@@ -3144,7 +3183,7 @@
         }
 
         // ================================================================
-        // 6. ADMIN CHAT LIST (show all companies as chat entries)
+        // CHAT FUNCTIONS
         // ================================================================
         function renderChatList() {
             const companies = allStations.filter(s => !s.isBlocked);
@@ -3179,9 +3218,6 @@
                 `<i class="fas fa-comments"></i> ${companies.length} companies`;
         }
 
-        // ================================================================
-        // 7. CHAT / CALL FUNCTIONS (from Zynapse)
-        // ================================================================
         async function openCompanyChat(companyId) {
             const company = allStations.find(s => s.id === companyId);
             if (!company) { showToast('Company not found', 'error'); return; }
@@ -3216,7 +3252,6 @@
         }
 
         function renderChatInterface() {
-            const chatPage = document.getElementById('chatPage');
             if (!currentChat) return;
             document.getElementById('chatUserAvatar').src = currentChat.userAvatar || 'https://via.placeholder.com/150';
             document.getElementById('chatUserName').textContent = currentChat.userName;
@@ -3302,6 +3337,21 @@
                     }
                 });
             chatListeners.push({ ref: onlineRef.child(currentChat.uid), listener: onlineListener });
+
+            // Listen for incoming calls
+            firestore.collection('calls')
+                .where('receiverUid', '==', currentUser?.uid || '')
+                .where('status', '==', 'ringing')
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added') {
+                            const callData = change.doc.data();
+                            if (currentCallId) return;
+                            currentCallId = change.doc.id;
+                            showIncomingCallUI(callData);
+                        }
+                    });
+                });
         }
 
         function cleanupChatListeners() {
@@ -3317,7 +3367,40 @@
             isTyping = false;
         }
 
+        function showIncomingCallUI(callData) {
+            const modal = document.getElementById('incomingCallModal');
+            document.getElementById('callerName').textContent = callData.callerName || 'Caller';
+            document.getElementById('callerId').textContent = callData.callerId || 'Unknown';
+            document.getElementById('incomingCallType').innerHTML =
+                `<i class="fas fa-${callData.isVideo ? 'video' : 'phone'}"></i> Incoming ${callData.isVideo ? 'Video' : 'Voice'} Call`;
+            ringingSound = new Audio('notification.mp3');
+            ringingSound.loop = true;
+            ringingSound.play().catch(e => console.log('Ring sound error:', e));
+            openModal('incomingCallModal');
+            setTimeout(() => {
+                if (modal.classList.contains('active')) {
+                    missCall();
+                }
+            }, 45000);
+        }
+
+        async function missCall() {
+            if (ringingSound) { ringingSound.pause();
+                ringingSound = null; }
+            closeModal('incomingCallModal');
+            if (currentCallId) {
+                await firestore.collection('calls').doc(currentCallId).update({
+                    status: 'missed',
+                    wasConnected: false,
+                    endedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+            cleanupCall();
+            showToast('Call missed', 'info');
+        }
+
         async function loadMessages() {
+            if (!currentChat) return;
             try {
                 const snapshot = await messagesRef.child(currentChat.id)
                     .orderByChild('timestamp')
@@ -3337,13 +3420,13 @@
                 }
                 const messages = [];
                 const messageIds = new Set();
-                snapshot.forEach((childSnapshot) => {
+                snapshot.forEach(childSnapshot => {
                     const message = childSnapshot.val();
                     message.id = childSnapshot.key;
                     if (!messageIds.has(message.id)) {
                         messageIds.add(message.id);
-                        if (message.type === 'view-once' && message.viewedBy && message.viewedBy.includes(
-                                currentUser?.uid)) {
+                        if (message.type === 'view-once' && message.viewedBy && message.viewedBy
+                            .includes(currentUser?.uid)) {
                             return;
                         }
                         messages.push(message);
@@ -3488,32 +3571,26 @@
                     case 'image':
                         icon = 'fas fa-image';
                         typeText = 'photo';
-                        displayText = displayText || 'Photo';
                         break;
                     case 'video':
                         icon = 'fas fa-video';
                         typeText = 'video';
-                        displayText = displayText || 'Video';
                         break;
                     case 'document':
                         icon = 'fas fa-file';
                         typeText = 'document';
-                        displayText = displayText || 'Document';
                         break;
                     case 'voice':
                         icon = 'fas fa-microphone';
                         typeText = 'voice message';
-                        displayText = displayText || 'Voice message';
                         break;
                     case 'location':
                         icon = 'fas fa-map-marker-alt';
                         typeText = 'location';
-                        displayText = displayText || 'Location';
                         break;
                     case 'view-once':
                         icon = 'fas fa-eye';
                         typeText = 'view-once photo';
-                        displayText = displayText || 'View once photo';
                         break;
                 }
             }
@@ -3974,7 +4051,7 @@
         }
 
         // ================================================================
-        // 8. ATTACHMENT FUNCTIONS
+        // ATTACHMENT FUNCTIONS
         // ================================================================
         function toggleAttachmentOptions() {
             const options = document.getElementById('attachmentOptions');
@@ -4244,7 +4321,7 @@
         }
 
         // ================================================================
-        // 9. VOICE RECORDING
+        // VOICE RECORDING
         // ================================================================
         function startVoiceRecording() {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -4358,7 +4435,7 @@
         }
 
         // ================================================================
-        // 10. VIEW-ONCE
+        // VIEW-ONCE
         // ================================================================
         async function viewOnceMessage(messageId) {
             try {
@@ -4405,11 +4482,11 @@
         }
 
         // ================================================================
-        // 11. CALL FUNCTIONS (WebRTC + Firestore)
+        // CALL FUNCTIONS
         // ================================================================
         async function initiateCall(isVideo) {
             if (!currentChat || currentChat.type !== 'private') {
-                showToast('You can only call contacts', 'error');
+                showToast('You can only call companies', 'error');
                 return;
             }
             currentCallType = isVideo ? 'video' : 'audio';
@@ -4694,61 +4771,7 @@
         }
 
         // ================================================================
-        // 12. CHAT THEME
-        // ================================================================
-        function openChatThemeModal() {
-            if (!currentChat) return;
-            openModal('chatThemeModal');
-            document.querySelectorAll('.theme-option').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.theme === 'normal') btn.classList.add('active');
-            });
-            document.getElementById('customThemeOptions').style.display = 'none';
-        }
-
-        function selectTheme(theme) {
-            document.querySelectorAll('.theme-option').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.theme === theme) btn.classList.add('active');
-            });
-            document.getElementById('customThemeOptions').style.display = theme === 'custom' ? 'block' : 'none';
-        }
-
-        async function saveChatTheme() {
-            if (!currentChat) return;
-            const theme = document.querySelector('.theme-option.active')?.dataset.theme;
-            if (!theme) { showToast('Please select a theme', 'error'); return; }
-            const themeData = { theme };
-            if (theme === 'custom') {
-                themeData.sentBubbleColor = document.getElementById('sentBubbleColor').value;
-                themeData.receivedBubbleColor = document.getElementById('receivedBubbleColor').value;
-            }
-            try {
-                await db.ref(`users/${currentUser.uid}/chatThemes/${currentChat.id}`).set(themeData);
-                showToast('Theme applied!', 'success');
-                closeModal('chatThemeModal');
-                applyChatTheme(currentChat.id, themeData);
-            } catch (error) {
-                console.error('Error saving theme:', error);
-                showToast('Failed to save theme', 'error');
-            }
-        }
-
-        function applyChatTheme(chatId, themeData) {
-            const chatMessagesContainer = document.querySelector('.chat-messages-container');
-            if (!chatMessagesContainer) return;
-            chatMessagesContainer.classList.remove('theme-love', 'theme-custom');
-            if (themeData.theme === 'love') {
-                chatMessagesContainer.classList.add('theme-love');
-            } else if (themeData.theme === 'custom') {
-                chatMessagesContainer.classList.add('theme-custom');
-                document.documentElement.style.setProperty('--chat-sent-bubble', themeData.sentBubbleColor);
-                document.documentElement.style.setProperty('--chat-received-bubble', themeData.receivedBubbleColor);
-            }
-        }
-
-        // ================================================================
-        // 13. CHAT OPTIONS
+        // CHAT OPTIONS & THEME
         // ================================================================
         function openChatOptions() { openModal('chatOptionsModal'); }
 
@@ -4794,8 +4817,57 @@
             }
         }
 
+        function openChatThemeModal() {
+            openModal('chatThemeModal');
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.theme === 'normal') btn.classList.add('active');
+            });
+            document.getElementById('customThemeOptions').style.display = 'none';
+        }
+
+        function selectTheme(theme) {
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.theme === theme) btn.classList.add('active');
+            });
+            document.getElementById('customThemeOptions').style.display = theme === 'custom' ? 'block' : 'none';
+        }
+
+        async function saveChatTheme() {
+            const theme = document.querySelector('.theme-option.active')?.dataset.theme;
+            if (!theme) { showToast('Please select a theme', 'error'); return; }
+            const themeData = { theme };
+            if (theme === 'custom') {
+                themeData.sentBubbleColor = document.getElementById('sentBubbleColor').value;
+                themeData.receivedBubbleColor = document.getElementById('receivedBubbleColor').value;
+            }
+            try {
+                await db.ref(`users/${currentUser.uid}/chatThemes/${currentChat.id}`).set(themeData);
+                showToast('Theme applied!', 'success');
+                closeModal('chatThemeModal');
+                applyChatTheme(currentChat.id, themeData);
+            } catch (error) {
+                console.error('Error saving theme:', error);
+                showToast('Failed to save theme', 'error');
+            }
+        }
+
+        function applyChatTheme(chatId, themeData) {
+            const chatMessagesContainer = document.querySelector('.chat-messages-container');
+            if (!chatMessagesContainer) return;
+            chatMessagesContainer.classList.remove('theme-love', 'theme-custom');
+            if (themeData.theme === 'love') {
+                chatMessagesContainer.classList.add('theme-love');
+            } else if (themeData.theme === 'custom') {
+                chatMessagesContainer.classList.add('theme-custom');
+                document.documentElement.style.setProperty('--chat-sent-bubble', themeData.sentBubbleColor);
+                document.documentElement.style.setProperty('--chat-received-bubble', themeData.receivedBubbleColor);
+            }
+        }
+
         // ================================================================
-        // 14. MISCELLANEOUS HELPERS
+        // MISCELLANEOUS HELPERS
         // ================================================================
         function viewMedia(url) { window.open(url, '_blank'); }
 
@@ -4873,7 +4945,7 @@
         }
 
         // ================================================================
-        // 15. LOGIN / AUTH
+        // LOGIN / AUTH
         // ================================================================
         document.getElementById("loginBtn").onclick = async () => {
             const email = document.getElementById("adminEmail").value.trim();
@@ -4905,7 +4977,6 @@
                 document.getElementById("bottomNav").style.display = "flex";
                 await refreshAll();
 
-                // Nav handlers
                 document.querySelectorAll(".nav-item[data-nav]").forEach(btn => {
                     btn.onclick = () => {
                         document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
@@ -4930,10 +5001,9 @@
                 };
                 document.getElementById("refreshBtn").onclick = async () => {
                     await refreshAll();
-                    showToastAdmin("Refreshed");
+                    showToast("Refreshed", 'info');
                 };
 
-                // Default to users tab
                 document.querySelector(".nav-item[data-nav='users']").classList.add("active");
             } else {
                 if (user) await auth.signOut();
@@ -4944,7 +5014,7 @@
         });
 
         // ================================================================
-        // 16. PWA INSTALL
+        // PWA INSTALL
         // ================================================================
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
@@ -4972,7 +5042,7 @@
         }
 
         // ================================================================
-        // 17. MODAL OVERLAY CLOSE ON BACKDROP CLICK
+        // MODAL OVERLAY CLOSE ON BACKDROP CLICK
         // ================================================================
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
             overlay.addEventListener('click', function(e) {
@@ -4984,7 +5054,7 @@
         });
 
         // ================================================================
-        // 18. CHAT INPUT AUTO-RESIZE + ENTER KEY
+        // CHAT INPUT AUTO-RESIZE + ENTER KEY
         // ================================================================
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
@@ -5018,7 +5088,7 @@
         chatInput.addEventListener('focus', scrollToBottom);
 
         // ================================================================
-        // 19. EMOJI PICKER
+        // EMOJI PICKER
         // ================================================================
         const emojiPicker = document.querySelector('emoji-picker');
         if (emojiPicker) {
@@ -5033,7 +5103,7 @@
         }
 
         // ================================================================
-        // 20. WINDOW EVENTS
+        // WINDOW EVENTS
         // ================================================================
         window.addEventListener('beforeunload', () => {
             cleanupListeners();
