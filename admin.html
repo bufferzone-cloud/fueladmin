@@ -23,7 +23,9 @@
     </script>
     <style>
         /* ===== RESET & BASE ===== */
-        * {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -806,6 +808,10 @@
             font-size: 1.2rem;
             flex-shrink: 0;
         }
+        .card .card-header .icon-wrap.green {
+            background: var(--green-light);
+            color: var(--green);
+        }
         .card .card-header .icon-wrap.teal {
             background: var(--primary-light);
             color: var(--primary);
@@ -883,6 +889,14 @@
         .card .card-actions .btn-icon:hover {
             background: var(--gray-200);
         }
+        .card .card-actions .btn-icon.green {
+            background: var(--green-light);
+            color: var(--green);
+        }
+        .card .card-actions .btn-icon.green:hover {
+            background: var(--green);
+            color: #fff;
+        }
         .card .card-actions .btn-icon.teal {
             background: var(--primary-light);
             color: var(--primary);
@@ -899,6 +913,14 @@
             background: var(--red);
             color: #fff;
         }
+        .card .card-actions .btn-icon.amber {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .card .card-actions .btn-icon.amber:hover {
+            background: var(--accent);
+            color: #fff;
+        }
         .card .card-actions .btn-icon.blue {
             background: var(--blue-light);
             color: var(--blue);
@@ -906,6 +928,25 @@
         .card .card-actions .btn-icon.blue:hover {
             background: var(--blue);
             color: #fff;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -2px;
+            right: -4px;
+            background: var(--red);
+            color: var(--white);
+            font-size: 0.55rem;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 1px solid var(--white);
+            pointer-events: none;
         }
 
         .status-badge {
@@ -924,6 +965,10 @@
         .status-badge.inactive {
             background: var(--gray-100);
             color: var(--gray-500);
+        }
+        .status-badge.maintenance {
+            background: var(--accent-light);
+            color: var(--accent);
         }
         .status-badge.pending {
             background: var(--accent-light);
@@ -1430,183 +1475,6 @@
             margin-top: 8px;
         }
 
-        /* ===== PAGE HEADER ===== */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        .page-header h2 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--gray-800);
-        }
-        .page-header .page-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .page-header .page-actions .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .page-header .page-actions .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
-        .page-header .page-actions .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px var(--primary-glow);
-        }
-        .page-header .page-actions .btn-secondary {
-            background: var(--gray-100);
-            color: var(--gray-600);
-        }
-        .page-header .page-actions .btn-secondary:hover {
-            background: var(--gray-200);
-        }
-
-        /* ===== ENTITY TOGGLE ===== */
-        .entity-toggle {
-            display: flex;
-            background: var(--gray-100);
-            border-radius: var(--radius-full);
-            padding: 4px;
-            gap: 4px;
-            margin-bottom: 16px;
-        }
-        .entity-toggle .toggle-btn {
-            flex: 1;
-            padding: 8px 16px;
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
-            background: transparent;
-            color: var(--gray-500);
-        }
-        .entity-toggle .toggle-btn.active {
-            background: var(--white);
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-        .entity-toggle .toggle-btn:hover:not(.active) {
-            color: var(--gray-700);
-        }
-
-        /* ===== COMPANY MONITORING CARDS ===== */
-        .monitor-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        .monitor-card {
-            background: var(--gray-50);
-            border-radius: var(--radius-sm);
-            padding: 10px 8px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-        }
-        .monitor-card .monitor-value {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-        .monitor-card .monitor-label {
-            font-size: 0.6rem;
-            color: var(--gray-500);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .monitor-card .monitor-icon {
-            font-size: 1rem;
-            color: var(--gray-400);
-            margin-bottom: 2px;
-        }
-
-        /* ===== SYSTEM CONTROL ===== */
-        .system-toggle-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            border: 1px solid var(--gray-200);
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-        .system-toggle-card .toggle-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .system-toggle-card .toggle-header h4 {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-        .system-toggle-card .toggle-header h4 i {
-            margin-right: 8px;
-        }
-        .system-toggle-card .toggle-description {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-            margin-bottom: 4px;
-            line-height: 1.5;
-        }
-        .system-toggle-card .toggle-warning {
-            font-size: 0.8rem;
-            color: var(--red);
-            background: var(--red-light);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            margin-top: 8px;
-            display: none;
-        }
-        .system-toggle-card .toggle-warning.visible {
-            display: block;
-        }
-        .system-toggle-card .toggle-warning i {
-            margin-right: 6px;
-        }
-        .system-toggle-card .toggle-warning strong {
-            color: var(--red);
-        }
-        .system-toggle-card .communication-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--gray-200);
-        }
-        .system-toggle-card .communication-check label {
-            font-size: 0.8rem;
-            color: var(--gray-600);
-            cursor: pointer;
-        }
-        .system-toggle-card .communication-check input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
         /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
@@ -1760,6 +1628,99 @@
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .app-header .brand h1 {
+                font-size: 1rem;
+            }
+            .toolbar .stats-pill {
+                font-size: 0.6rem;
+                padding: 2px 10px;
+            }
+            .toolbar .search-box input {
+                font-size: 0.75rem;
+                padding: 6px 12px 6px 32px;
+            }
+            .card {
+                padding: 12px;
+            }
+            .modal {
+                max-width: 100%;
+                border-radius: var(--radius-lg);
+                margin: 8px;
+            }
+            .bottom-nav .nav-item i {
+                font-size: 1.1rem;
+            }
+            .bottom-nav .nav-item {
+                font-size: 0.5rem;
+            }
+            .map-container {
+                height: 200px;
+            }
+        }
+        @media (min-width: 600px) {
+            .grid-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 900px) {
+            .grid-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .content-area {
+                padding: 20px 24px calc(var(--nav-h) + 24px + var(--safe-bottom));
+            }
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .page-header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--gray-800);
+        }
+        .page-header .page-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .page-header .page-actions .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .page-header .page-actions .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .page-header .page-actions .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .page-header .page-actions .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        .page-header .page-actions .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
         /* ===== FILE UPLOAD ===== */
         .file-upload-row {
             display: flex;
@@ -1800,111 +1761,139 @@
             margin-bottom: 4px;
         }
 
-        /* ===== COMPANY EXPANDABLE ===== */
-        .company-details-drop {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            opacity: 0;
+        /* ===== ENTITY TOGGLE ===== */
+        .entity-toggle {
+            display: flex;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            padding: 4px;
+            gap: 4px;
+            margin-bottom: 16px;
         }
-        .company-details-drop.open {
-            max-height: 600px;
-            opacity: 1;
+        .entity-toggle .toggle-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font);
+            background: transparent;
+            color: var(--gray-500);
+        }
+        .entity-toggle .toggle-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .entity-toggle .toggle-btn:hover:not(.active) {
+            color: var(--gray-700);
+        }
+
+        /* ===== MONITOR GRID ===== */
+        .monitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .monitor-card {
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+        .monitor-card .monitor-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .monitor-card .monitor-label {
+            font-size: 0.6rem;
+            color: var(--gray-500);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .monitor-card .monitor-icon {
+            font-size: 1rem;
+            color: var(--gray-400);
+            margin-bottom: 2px;
+        }
+
+        /* ===== SYSTEM CONTROL ===== */
+        .system-toggle-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+        .system-toggle-card .toggle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .system-toggle-card .toggle-header h4 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .system-toggle-card .toggle-header h4 i {
+            margin-right: 8px;
+        }
+        .system-toggle-card .toggle-description {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+        .system-toggle-card .toggle-warning {
+            font-size: 0.8rem;
+            color: var(--red);
+            background: var(--red-light);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
             margin-top: 8px;
-            padding-top: 8px;
+            display: none;
+        }
+        .system-toggle-card .toggle-warning.visible {
+            display: block;
+        }
+        .system-toggle-card .toggle-warning i {
+            margin-right: 6px;
+        }
+        .system-toggle-card .toggle-warning strong {
+            color: var(--red);
+        }
+        .system-toggle-card .communication-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
             border-top: 1px solid var(--gray-200);
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .app-header .brand h1 {
-                font-size: 1rem;
-            }
-            .toolbar .stats-pill {
-                font-size: 0.6rem;
-                padding: 2px 10px;
-            }
-            .toolbar .search-box input {
-                font-size: 0.75rem;
-                padding: 6px 12px 6px 32px;
-            }
-            .card {
-                padding: 12px;
-            }
-            .modal {
-                max-width: 100%;
-                border-radius: var(--radius-lg);
-                margin: 8px;
-            }
-            .bottom-nav .nav-item i {
-                font-size: 1.1rem;
-            }
-            .bottom-nav .nav-item {
-                font-size: 0.5rem;
-            }
-            .monitor-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .system-toggle-card {
-                padding: 14px;
-            }
-            .file-upload-row {
-                flex-direction: column;
-            }
-        }
-        @media (min-width: 600px) {
-            .grid-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .monitor-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        @media (min-width: 900px) {
-            .grid-cards {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .monitor-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            .content-area {
-                padding: 20px 24px calc(var(--nav-h) + 24px + var(--safe-bottom));
-            }
-        }
-
-        .btn-outline {
-            border: 1.5px solid var(--primary);
-            background: transparent;
-            color: var(--primary);
-            border-radius: var(--radius-full);
-            padding: 4px 12px;
-            font-size: 0.7rem;
+        .system-toggle-card .communication-check label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
             cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-weight: 600;
-            text-decoration: none;
         }
-        .btn-outline:hover {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: var(--primary-glow);
-            transform: translateY(-1px);
-        }
-        .btn-outline i {
-            font-size: 0.7rem;
-        }
-        .btn-outline-sm {
-            padding: 2px 8px;
-            font-size: 0.6rem;
+        .system-toggle-card .communication-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== TOAST CONTAINER ===== -->
+    <!-- ===== TOAST ===== -->
     <div id="toastContainer"></div>
 
     <!-- ===== LOGIN ===== -->
@@ -2097,10 +2086,15 @@
         let selectedCountry = 'all';
         let revenueChart = null;
         let stationViewMode = 'stations';
+        let unreadMessages = 0;
+
+        // Chat
         let currentChat = null;
         let chatListeners = [];
         let isTyping = false;
         let typingTimeout = null;
+
+        // Calls
         let localStream = null;
         let remoteStream = null;
         let peerConnection = null;
@@ -2110,8 +2104,6 @@
         let callDocListener = null;
         let callerCandidateListener = null;
         let receiverCandidateListener = null;
-        let mapPopupInstance = null;
-
         const iceServers = {
             iceServers: [
                 { urls: 'stun:stun.relay.metered.ca:80' },
@@ -2165,6 +2157,14 @@
             if (d.toDateString() === today.toDateString()) return 'Today';
             if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
             return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
         }
 
         function getFullCountry(code) {
@@ -2233,6 +2233,7 @@
                 await refreshAll();
                 setupNavButtons();
                 setupToolbar();
+                listenForUnreadMessages();
                 document.querySelector('.nav-item[data-tab="users"]').classList.add('active');
                 showToast('Welcome Admin!', 'success');
             } catch (err) {
@@ -2255,6 +2256,7 @@
                 await refreshAll();
                 setupNavButtons();
                 setupToolbar();
+                listenForUnreadMessages();
                 document.querySelector('.nav-item[data-tab="users"]').classList.add('active');
             } else if (!user && currentUser) {
                 currentUser = null;
@@ -2282,6 +2284,45 @@
         }
 
         // ==============================================================
+        // UNREAD MESSAGES BADGE
+        // ==============================================================
+        function listenForUnreadMessages() {
+            const messagesRef = db.ref('messages');
+            messagesRef.on('child_added', (snap) => {
+                const msg = snap.val();
+                if (msg && msg.senderUid !== currentUser?.uid) {
+                    unreadMessages++;
+                    updateChatBadge();
+                }
+            });
+            // Also listen for messages in all chat rooms
+            messagesRef.on('child_changed', (snap) => {
+                const msg = snap.val();
+                if (msg && msg.delivered === true && msg.senderUid !== currentUser?.uid) {
+                    // Message delivered, reduce count if we track per-room
+                }
+            });
+        }
+
+        function updateChatBadge() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const chatNav = document.querySelector('.nav-item[data-tab="chat"]');
+            if (chatNav) {
+                let badge = chatNav.querySelector('.nav-badge');
+                if (unreadMessages > 0) {
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'nav-badge';
+                        chatNav.appendChild(badge);
+                    }
+                    badge.textContent = unreadMessages > 99 ? '99+' : unreadMessages;
+                } else {
+                    if (badge) badge.remove();
+                }
+            }
+        }
+
+        // ==============================================================
         // DATA LOADING
         // ==============================================================
         async function loadUsers() {
@@ -2304,7 +2345,8 @@
                         totalTrips: data.totalTrips || 0,
                         totalSpent: data.totalSpent || 0,
                         lastActive: data.lastActive || null,
-                        joinDate: data.createdAt || null
+                        joinDate: data.createdAt || null,
+                        profilePic: data.profilePic || 'https://via.placeholder.com/150'
                     });
                 });
             }
@@ -2341,6 +2383,7 @@
             }
             const blocked = (await db.ref('blocked/stations').once('value')).val() || {};
             result.forEach(s => s.isBlocked = blocked[s.id] === true);
+            // Station = has location, Company = no location
             allStations = result.filter(s => s.location && s.location.lat && s.location.lng);
             allCompanies = result.filter(s => !(s.location && s.location.lat && s.location.lng));
             return result;
@@ -2372,7 +2415,11 @@
                 totalFuelCost: data.fuelLogs ? Object.values(data.fuelLogs).reduce((s, f) => s + (parseFloat(f.cost) ||
                     0), 0) : 0,
                 driverCount: data.drivers ? Object.keys(data.drivers).length : 0,
-                vehicleCount: data.vehicles ? Object.keys(data.vehicles).length : 0
+                vehicleCount: data.vehicles ? Object.keys(data.vehicles).length : 0,
+                totalTripDistance: data.trips ? Object.values(data.trips).reduce((s, t) => s + (parseFloat(t
+                    .distance) || 0), 0) : 0,
+                avgFuelEfficiency: data.fuelLogs && data.vehicles ? (Object.values(data.fuelLogs).reduce((s, f) => s + (
+                    parseFloat(f.litres) || 0), 0) / Object.keys(data.vehicles).length) : 0
             };
         }
 
@@ -2438,12 +2485,12 @@
                     let locHtml = 'No location';
                     if (u.location?.lat && u.location?.lng) {
                         locHtml =
-                            `<button class="btn-outline btn-outline-sm" onclick="showLocationMap(${u.location.lat}, ${u.location.lng}, '${escapeHtml(u.name)}', false)"><i class="fas fa-map-marker-alt"></i> View on Map</button>`;
+                            `<button class="btn-outline btn-sm" onclick="showLocationMap(${u.location.lat}, ${u.location.lng}, '${escapeHtml(u.name)}')"><i class="fas fa-map-marker-alt"></i> View on Map</button>`;
                     }
                     let garageHtml = '';
                     if (u.vehicleCount > 0 || (u.garagePics && u.garagePics.length > 0)) {
                         garageHtml =
-                            `<button class="btn-outline btn-outline-sm" onclick="viewUserGarage('${u.id}')"><i class="fas fa-car"></i> Garage</button>`;
+                            `<button class="btn-outline btn-sm" onclick="viewUserGarage('${u.id}')"><i class="fas fa-car"></i> Garage</button>`;
                     }
                     html += `
                         <div class="card">
@@ -2466,6 +2513,7 @@
                                 <div class="detail-row"><span class="label">Total Spent</span><span class="value">$${u.totalSpent || 0}</span></div>
                                 <div class="detail-row"><span class="label">Joined</span><span class="value">${u.joinDate ? formatTime(u.joinDate) : 'N/A'}</span></div>
                                 ${u.lastActive ? `<div class="detail-row"><span class="label">Last Active</span><span class="value">${formatTime(u.lastActive)}</span></div>` : ''}
+                                ${u.profilePic ? `<div class="detail-row"><span class="label">Profile</span><span class="value"><img src="${escapeHtml(u.profilePic)}" style="width:30px;height:30px;object-fit:cover;border-radius:50%;border:1px solid var(--gray-200);" onclick="window.open('${escapeHtml(u.profilePic)}','_blank')" /></span></div>` : ''}
                             </div>
                             <div class="card-actions">
                                 ${garageHtml}
@@ -2524,7 +2572,7 @@
 
                     if (s.location?.lat && s.location?.lng) {
                         locHtml =
-                            `<button class="btn-outline btn-outline-sm" onclick="showLocationMap(${s.location.lat}, ${s.location.lng}, '${escapeHtml(s.stationName)}', true)"><i class="fas fa-map-marker-alt"></i> View on Map</button>`;
+                            `<button class="btn-outline btn-sm" onclick="showLocationMap(${s.location.lat}, ${s.location.lng}, '${escapeHtml(s.stationName)}')"><i class="fas fa-map-marker-alt"></i> View on Map</button>`;
                     }
 
                     if (stationViewMode === 'stations') {
@@ -2550,80 +2598,43 @@
                                 <div class="monitor-card"><div class="monitor-icon"><i class="fas fa-map"></i></div><div class="monitor-value">${monitor.routes}</div><div class="monitor-label">Routes</div></div>
                                 <div class="monitor-card"><div class="monitor-icon"><i class="fas fa-play-circle"></i></div><div class="monitor-value">${monitor.activeTrips}</div><div class="monitor-label">Active Trips</div></div>
                                 <div class="monitor-card"><div class="monitor-icon"><i class="fas fa-money-bill"></i></div><div class="monitor-value">$${monitor.totalFuelCost.toFixed(2)}</div><div class="monitor-label">Fuel Cost</div></div>
+                                <div class="monitor-card"><div class="monitor-icon"><i class="fas fa-road"></i></div><div class="monitor-value">${monitor.totalTripDistance.toFixed(1)} km</div><div class="monitor-label">Trip Distance</div></div>
+                                <div class="monitor-card"><div class="monitor-icon"><i class="fas fa-leaf"></i></div><div class="monitor-value">${monitor.avgFuelEfficiency.toFixed(1)} L/veh</div><div class="monitor-label">Avg Fuel</div></div>
                             </div>
                         `;
                     }
 
                     const isActive = !s.isBlocked;
 
-                    // For companies: wrap card in clickable container with expandable details
-                    if (stationViewMode === 'companies') {
-                        html += `
-                            <div class="card" style="cursor:pointer;" onclick="toggleCompanyDetails('${s.id}')">
-                                <div class="card-header">
-                                    <div class="icon-wrap teal"><i class="fas ${icon}"></i></div>
-                                    <div>
-                                        <div class="card-title">${escapeHtml(s.stationName || 'Unnamed')}</div>
-                                        <div class="card-subtitle">${escapeHtml(s.managerName || 'N/A')}</div>
-                                    </div>
-                                    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-                                        <span class="status-badge ${isActive ? 'active' : 'inactive'}"><span class="dot"></span> ${isActive ? 'Active' : 'Shutdown'}</span>
-                                        <div class="ios-toggle ${isActive ? 'active' : ''}" data-station="${s.id}"><div class="toggle-knob"></div></div>
-                                    </div>
+                    html += `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="icon-wrap teal"><i class="fas ${icon}"></i></div>
+                                <div>
+                                    <div class="card-title">${escapeHtml(s.stationName || 'Unnamed')}</div>
+                                    <div class="card-subtitle">${escapeHtml(s.managerName || 'N/A')}</div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="detail-row"><span class="label">Email</span><span class="value">${escapeHtml(s.email || 'N/A')}</span></div>
-                                    <div class="detail-row"><span class="label">Phone</span><span class="value">${escapeHtml(s.phone || 'N/A')}</span></div>
-                                    <div class="detail-row"><span class="label">Country</span><span class="value">${getFullCountry(s.country)}</span></div>
-                                    ${companyMonitoring ? companyMonitoring : ''}
-                                    <div class="company-details-drop" id="companyDetails_${s.id}">
-                                        <div class="detail-row"><span class="label">Reg. Date</span><span class="value">${s.createdAt ? formatTime(s.createdAt) : 'N/A'}</span></div>
-                                        <div class="detail-row"><span class="label">Last Updated</span><span class="value">${s.lastUpdated ? formatTime(s.lastUpdated) : 'N/A'}</span></div>
-                                        ${s.logo ? `<div class="detail-row"><span class="label">Logo</span><span class="value"><img src="${s.logo}" style="width:40px;height:40px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--gray-200);" onclick="window.open('${s.logo}','_blank')" /></span></div>` : ''}
-                                        ${s.registration ? `<div class="detail-row"><span class="label">Reg. Cert</span><span class="value"><a href="${s.registration}" target="_blank">View</a></span></div>` : ''}
-                                        ${s.zraDocs ? `<div class="detail-row"><span class="label">ZRA Cert</span><span class="value"><a href="${s.zraDocs}" target="_blank">View</a></span></div>` : ''}
-                                    </div>
-                                </div>
-                                <div class="card-actions">
-                                    <button class="btn-icon teal" onclick="event.stopPropagation();editStation('${s.id}')"><i class="fas fa-edit"></i> Edit</button>
-                                    <button class="btn-icon blue" onclick="event.stopPropagation();viewStationPayments('${s.id}')"><i class="fas fa-credit-card"></i> Payments</button>
-                                    <button class="btn-icon green" onclick="event.stopPropagation();openChat('${s.id}')"><i class="fas fa-comment"></i> Chat</button>
+                                <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                                    <span class="status-badge ${isActive ? 'active' : 'inactive'}"><span class="dot"></span> ${isActive ? 'Active' : 'Shutdown'}</span>
+                                    <div class="ios-toggle ${isActive ? 'active' : ''}" data-station="${s.id}"><div class="toggle-knob"></div></div>
                                 </div>
                             </div>
-                        `;
-                    } else {
-                        // Stations card
-                        html += `
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="icon-wrap teal"><i class="fas ${icon}"></i></div>
-                                    <div>
-                                        <div class="card-title">${escapeHtml(s.stationName || 'Unnamed')}</div>
-                                        <div class="card-subtitle">${escapeHtml(s.managerName || 'N/A')}</div>
-                                    </div>
-                                    <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-                                        <span class="status-badge ${isActive ? 'active' : 'inactive'}"><span class="dot"></span> ${isActive ? 'Active' : 'Shutdown'}</span>
-                                        <div class="ios-toggle ${isActive ? 'active' : ''}" data-station="${s.id}"><div class="toggle-knob"></div></div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="detail-row"><span class="label">Email</span><span class="value">${escapeHtml(s.email || 'N/A')}</span></div>
-                                    <div class="detail-row"><span class="label">Phone</span><span class="value">${escapeHtml(s.phone || 'N/A')}</span></div>
-                                    <div class="detail-row"><span class="label">Country</span><span class="value">${getFullCountry(s.country)}</span></div>
-                                    <div class="detail-row"><span class="label">Location</span><span class="value">${locHtml}</span></div>
-                                    ${amenitiesHtml}
-                                    ${stationPicsHtml}
-                                    ${s.fuelTypes ? `<div class="detail-row"><span class="label">Fuel Types</span><span class="value">${s.fuelTypes.map(f => `<span class="badge badge-blue" style="display:inline-block;margin:2px;">${escapeHtml(f)}</span>`).join(' ')}</span></div>` : ''}
-                                    ${s.operatingHours ? `<div class="detail-row"><span class="label">Hours</span><span class="value">${escapeHtml(s.operatingHours)}</span></div>` : ''}
-                                </div>
-                                <div class="card-actions">
-                                    <button class="btn-icon teal" onclick="editStation('${s.id}')"><i class="fas fa-edit"></i> Edit</button>
-                                    <button class="btn-icon blue" onclick="viewStationPayments('${s.id}')"><i class="fas fa-credit-card"></i> Payments</button>
-                                    <button class="btn-icon green" onclick="openChat('${s.id}')"><i class="fas fa-comment"></i> Chat</button>
-                                </div>
+                            <div class="card-body">
+                                <div class="detail-row"><span class="label">Email</span><span class="value">${escapeHtml(s.email || 'N/A')}</span></div>
+                                <div class="detail-row"><span class="label">Phone</span><span class="value">${escapeHtml(s.phone || 'N/A')}</span></div>
+                                <div class="detail-row"><span class="label">Country</span><span class="value">${getFullCountry(s.country)}</span></div>
+                                <div class="detail-row"><span class="label">Location</span><span class="value">${locHtml}</span></div>
+                                ${amenitiesHtml}
+                                ${stationPicsHtml}
+                                ${companyMonitoring}
                             </div>
-                        `;
-                    }
+                            <div class="card-actions">
+                                <button class="btn-icon teal" onclick="editStation('${s.id}')"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-icon blue" onclick="viewStationPayments('${s.id}')"><i class="fas fa-credit-card"></i> Payments</button>
+                                <button class="btn-icon green" onclick="openChat('${s.id}')"><i class="fas fa-comment"></i> Chat</button>
+                            </div>
+                        </div>
+                    `;
                 }
                 html += `</div>`;
             }
@@ -2644,52 +2655,6 @@
                     renderStations();
                 };
             });
-        }
-
-        // ==============================================================
-        // COMPANY DETAILS TOGGLE
-        // ==============================================================
-        function toggleCompanyDetails(id) {
-            const el = document.getElementById(`companyDetails_${id}`);
-            if (el) {
-                el.classList.toggle('open');
-            }
-        }
-
-        // ==============================================================
-        // USER GARAGE VIEW
-        // ==============================================================
-        function viewUserGarage(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) { showToast('User not found', 'error'); return; }
-            const modal = document.getElementById('detailModal');
-            document.getElementById('modalTitle').textContent = `🚗 ${escapeHtml(user.name || 'User')}'s Garage`;
-            let content = `
-                <div class="revenue-card" style="margin-bottom:16px;">
-                    <div class="revenue-number">${user.vehicleCount || 0}</div>
-                    <div>Registered Vehicles</div>
-                </div>
-            `;
-            if (user.garagePics && user.garagePics.length > 0) {
-                content += `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">`;
-                user.garagePics.forEach(p => {
-                    content +=
-                        `<img src="${p}" style="width:80px;height:80px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--gray-200);cursor:pointer;" onclick="window.open('${p}','_blank')" />`;
-                });
-                content += `</div>`;
-            } else {
-                content += `<div class="empty-state" style="padding:20px;"><i class="fas fa-car"></i><p>No vehicles or garage photos</p></div>`;
-            }
-            if (user.vehicles && user.vehicles.length > 0) {
-                content += `<div style="margin-top:8px;"><strong>Vehicles:</strong></div>`;
-                user.vehicles.forEach(v => {
-                    content +=
-                        `<div class="detail-row"><span class="label">${escapeHtml(v.make || 'Unknown')} ${escapeHtml(v.model || '')}</span><span class="value">${escapeHtml(v.plate || 'N/A')}</span></div>`;
-                });
-            }
-            document.getElementById('modalBody').innerHTML = content;
-            document.getElementById('modalFooter').style.display = 'none';
-            openModal('detailModal');
         }
 
         function renderPayments() {
@@ -3459,42 +3424,15 @@
         }
 
         // ==============================================================
-        // MAP POPUP WITH AMENITIES
+        // MAP LOCATION
         // ==============================================================
-        async function showLocationMap(lat, lng, title, isStation = false) {
+        let mapPopupInstance = null;
+
+        function showLocationMap(lat, lng, title) {
             const modal = document.getElementById('detailModal');
             document.getElementById('modalTitle').textContent = `📍 ${title}`;
-            let amenitiesHtml = '';
-
-            if (isStation) {
-                try {
-                    const url =
-                        `https://overpass-api.de/api/interpreter?data=[out:json];(node["amenity"](${lat-0.003},${lng-0.003},${lat+0.003},${lng+0.003});node["shop"](${lat-0.003},${lng-0.003},${lat+0.003},${lng+0.003}););out;`;
-                    const res = await fetch(url);
-                    const data = await res.json();
-                    const amenities = new Set();
-                    data.elements.forEach(el => {
-                        if (el.tags) {
-                            const tag = el.tags.amenity || el.tags.shop || el.tags.name || 'Amenity';
-                            amenities.add(tag);
-                        }
-                    });
-                    if (amenities.size) {
-                        amenitiesHtml =
-                            `<div style="margin-bottom:8px;"><strong>Nearby Amenities:</strong> ${Array.from(amenities).map(a => `<span class="badge badge-green" style="display:inline-block;margin:2px;">${escapeHtml(a.charAt(0).toUpperCase()+a.slice(1))}</span>`).join(' ')}</div>`;
-                    } else {
-                        amenitiesHtml =
-                            `<div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:8px;">No common amenities found nearby.</div>`;
-                    }
-                } catch (e) {
-                    amenitiesHtml =
-                        `<div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:8px;">Could not fetch amenities.</div>`;
-                }
-            }
-
             document.getElementById('modalBody').innerHTML = `
                 <div class="map-container" id="mapPopupContainer"></div>
-                ${amenitiesHtml}
                 <div class="address-display"><i class="fas fa-map-pin"></i> <span id="mapPopupAddress">Loading address...</span></div>
                 <div style="font-size:0.8rem;color:var(--gray-500);">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
             `;
@@ -3527,16 +3465,54 @@
         }
 
         // ==============================================================
+        // USER GARAGE VIEW
+        // ==============================================================
+        function viewUserGarage(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) { showToast('User not found', 'error'); return; }
+            const modal = document.getElementById('detailModal');
+            document.getElementById('modalTitle').textContent = `🚗 ${escapeHtml(user.name || 'User')}'s Garage`;
+            let content = `
+                <div class="revenue-card" style="margin-bottom:16px;">
+                    <div class="revenue-number">${user.vehicleCount || 0}</div>
+                    <div>Registered Vehicles</div>
+                </div>
+            `;
+            if (user.garagePics && user.garagePics.length > 0) {
+                content += `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">`;
+                user.garagePics.forEach(p => {
+                    content +=
+                        `<img src="${p}" style="width:80px;height:80px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--gray-200);cursor:pointer;" onclick="window.open('${p}','_blank')" />`;
+                });
+                content += `</div>`;
+            } else {
+                content += `<div class="empty-state" style="padding:20px;"><i class="fas fa-car"></i><p>No vehicles or garage photos</p></div>`;
+            }
+            if (user.vehicles && user.vehicles.length > 0) {
+                content += `<div style="margin-top:8px;"><strong>Vehicles:</strong></div>`;
+                user.vehicles.forEach(v => {
+                    content +=
+                        `<div class="detail-row"><span class="label">${escapeHtml(v.make || 'Unknown')} ${escapeHtml(v.model || '')}</span><span class="value">${escapeHtml(v.plate || 'N/A')}</span></div>`;
+                });
+            }
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modalFooter').style.display = 'none';
+            openModal('detailModal');
+        }
+
+        // ==============================================================
         // CRUD ACTIONS
         // ==============================================================
         function openCreateUserModal() {
             const modal = document.getElementById('detailModal');
             document.getElementById('modalTitle').textContent = '👤 Add User';
             document.getElementById('modalBody').innerHTML = `
-                <div class="form-group"><label>Name</label><input id="cuName" class="form-control" placeholder="Full name"></div>
+                <div class="form-group"><label>Full Name</label><input id="cuName" class="form-control" placeholder="Full name"></div>
                 <div class="form-group"><label>Email</label><input id="cuEmail" class="form-control" placeholder="Email"></div>
+                <div class="form-group"><label>Password</label><input id="cuPassword" class="form-control" type="password" placeholder="Password (min 6 chars)"></div>
                 <div class="form-group"><label>Phone</label><input id="cuPhone" class="form-control" placeholder="Phone"></div>
                 <div class="form-group"><label>Country</label><input id="cuCountry" class="form-control" placeholder="Country code (e.g. ZM)"></div>
+                <div class="form-group"><label>Profile Picture URL</label><input id="cuProfilePic" class="form-control" placeholder="https://example.com/avatar.jpg"></div>
             `;
             document.getElementById('modalSaveBtn').onclick = saveUser;
             document.getElementById('modalSaveBtn').textContent = 'Add User';
@@ -3560,21 +3536,34 @@
         async function saveUser() {
             const name = document.getElementById('cuName').value.trim();
             const email = document.getElementById('cuEmail').value.trim();
+            const password = document.getElementById('cuPassword').value;
             const phone = document.getElementById('cuPhone').value.trim();
             const country = document.getElementById('cuCountry').value.trim() || 'ZM';
-            if (!name || !email) { showToast('Name and email required', 'error'); return; }
+            const profilePic = document.getElementById('cuProfilePic').value.trim() || 'https://via.placeholder.com/150';
+            if (!name || !email || !password) { showToast('Name, email and password required', 'error'); return; }
+            if (password.length < 6) { showToast('Password must be at least 6 characters', 'error'); return; }
             try {
-                await db.ref('users').push({
+                // Create Firebase Auth account
+                const userCred = await auth.createUserWithEmailAndPassword(email, password);
+                const uid = userCred.user.uid;
+                await db.ref('users').child(uid).set({
                     name,
                     email,
                     phone: phone || '',
                     country,
+                    profilePic,
                     createdAt: new Date().toISOString()
                 });
-                showToast('User added', 'success');
+                showToast('User added with auth account', 'success');
                 closeModal('detailModal');
                 refreshAll();
-            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+            } catch (err) {
+                if (err.code === 'auth/email-already-in-use') {
+                    showToast('Email already registered', 'error');
+                } else {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            }
         }
 
         async function editUser(id) {
@@ -3587,6 +3576,7 @@
                 <div class="form-group"><label>Email</label><input id="euEmail" class="form-control" value="${escapeHtml(u.email || '')}"></div>
                 <div class="form-group"><label>Phone</label><input id="euPhone" class="form-control" value="${escapeHtml(u.phone || '')}"></div>
                 <div class="form-group"><label>Country</label><input id="euCountry" class="form-control" value="${escapeHtml(u.country || '')}"></div>
+                <div class="form-group"><label>Profile Picture URL</label><input id="euProfilePic" class="form-control" value="${escapeHtml(u.profilePic || '')}"></div>
             `;
             document.getElementById('modalSaveBtn').onclick = () => saveUserEdit(id);
             document.getElementById('modalSaveBtn').textContent = 'Save Changes';
@@ -3599,9 +3589,11 @@
             const email = document.getElementById('euEmail').value.trim();
             const phone = document.getElementById('euPhone').value.trim();
             const country = document.getElementById('euCountry').value.trim();
+            const profilePic = document.getElementById('euProfilePic').value.trim() || 'https://via.placeholder.com/150';
             if (!name || !email) { showToast('Name and email required', 'error'); return; }
             try {
-                await db.ref(`users/${id}`).update({ name, email, phone: phone || '', country: country || '' });
+                await db.ref(`users/${id}`).update({ name, email, phone: phone || '', country: country || '',
+                    profilePic });
                 showToast('User updated', 'success');
                 closeModal('detailModal');
                 refreshAll();
@@ -4035,12 +4027,12 @@
         // ==============================================================
         // INIT
         // ==============================================================
-        console.log('✅ FuelRadar Admin · Full production version with all features');
-        console.log('📌 User cards: Edit, Block, View on Map, Garage');
-        console.log('📌 System Control: Checkbox → iOS toggle appears');
-        console.log('📌 Fuel Stations: Amenities, photos, fuel types, hours');
-        console.log('📌 Companies: Expandable cards with monitoring data');
-        console.log('📌 New: View on Map, Garage, and extended monitoring');
+        console.log('✅ FuelRadar Admin · Full production version');
+        console.log('📌 Users: Profile & password, garage, last known location map');
+        console.log('📌 Stations: Amenities, photos, fuel types, hours');
+        console.log('📌 Companies: Extended monitoring (vehicles, drivers, trips, fuel, breakdowns, routes, distance, efficiency)');
+        console.log('📌 Chat: Badge counter for unread messages');
+        console.log('📌 System: Communication checkbox + final warning form');
     </script>
 </body>
 </html>
